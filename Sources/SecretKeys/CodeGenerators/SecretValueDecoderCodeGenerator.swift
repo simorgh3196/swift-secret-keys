@@ -13,13 +13,15 @@ enum SecretValueDecoderCodeGenerator {
         import Foundation
 
         public enum SecretValueDecodingError: Error {
-            case invalidBytesSequence
+            case invalidByteSequence
             case cannotConvertValueOfType(String)
         }
 
-        struct SecretValueDecoder {
+        public struct SecretValueDecoder {
+            public init() {}
+
             @inline(__always)
-            func decode(bytes: [UInt8], with salt: [UInt8]) throws -> String {
+            public func decode(bytes: [UInt8], with salt: [UInt8]) throws -> String {
                 let cString = bytes.enumerated()
                     .map { index, byte in
                         byte ^ salt[index % salt.count]
@@ -27,14 +29,14 @@ enum SecretValueDecoderCodeGenerator {
                     .map(CChar.init(bitPattern:))
 
                 guard let decodedString = String(cString: cString, encoding: .utf8) else {
-                    throw SecretValueDecodingError.invalidBytesSequence
+                    throw SecretValueDecodingError.invalidByteSequence
                 }
 
                 return decodedString
             }
 
             @inline(__always)
-            func decode(bytes: [UInt8], with salt: [UInt8]) throws -> Int {
+            public func decode(bytes: [UInt8], with salt: [UInt8]) throws -> Int {
                 let decodedString: String = try decode(bytes: bytes, with: salt)
 
                 guard let boolValue = Int(decodedString) else {
@@ -45,7 +47,7 @@ enum SecretValueDecoderCodeGenerator {
             }
 
             @inline(__always)
-            func decode(bytes: [UInt8], with salt: [UInt8]) throws -> Double {
+            public func decode(bytes: [UInt8], with salt: [UInt8]) throws -> Double {
                 let decodedString: String = try decode(bytes: bytes, with: salt)
 
                 guard let doubleValue = Double(decodedString) else {
@@ -56,7 +58,7 @@ enum SecretValueDecoderCodeGenerator {
             }
 
             @inline(__always)
-            func decode(bytes: [UInt8], with salt: [UInt8]) throws -> Bool {
+            public func decode(bytes: [UInt8], with salt: [UInt8]) throws -> Bool {
                 let decodedString: String = try decode(bytes: bytes, with: salt)
 
                 guard let boolValue = Bool(decodedString) else {

@@ -34,8 +34,7 @@ struct FileIO {
 
         Logger.log(.debug, "Writing file to \(filePath)")
 
-        var isDirectory = ObjCBool(true)
-        if !shared.fileManager.fileExists(atPath: directoryPath, isDirectory: &isDirectory) {
+        if !fileExists(atPath: directoryPath, isDirectory: true) {
             do {
                 try shared.fileManager.createDirectory(atPath: directoryPath, withIntermediateDirectories: true)
             } catch {
@@ -49,11 +48,18 @@ struct FileIO {
     static func cleanDirectory(path directoryPath: String) throws {
         Logger.log(.debug, "Cleaning directory \(directoryPath)")
 
-        do {
-            try shared.fileManager.removeItem(atPath: directoryPath)
-            try shared.fileManager.createDirectory(atPath: directoryPath, withIntermediateDirectories: true)
-        } catch {
-            throw FileIOError.cannotCreateDirectory(directoryPath: directoryPath, error: error)
+        if fileExists(atPath: directoryPath, isDirectory: true) {
+            do {
+                try shared.fileManager.removeItem(atPath: directoryPath)
+                try shared.fileManager.createDirectory(atPath: directoryPath, withIntermediateDirectories: true)
+            } catch {
+                throw FileIOError.cannotCreateDirectory(directoryPath: directoryPath, error: error)
+            }
         }
+    }
+
+    static func fileExists(atPath path: String, isDirectory: Bool) -> Bool {
+        var isDirectory = ObjCBool(isDirectory)
+        return shared.fileManager.fileExists(atPath: path, isDirectory: &isDirectory)
     }
 }
