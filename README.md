@@ -8,7 +8,7 @@ A generator that allows access to environment variables and values defined in th
 
 - [ ] Features
   - [ ] Loading environment from process
-  - [v] Change behavior by configuration file
+  - [x] Change behavior by configuration file
   - [ ] Add tests for tool
   - [ ] Add installation methods
     - [ ] SwiftPM plugin
