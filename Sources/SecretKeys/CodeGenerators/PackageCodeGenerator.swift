@@ -5,7 +5,7 @@
 import Foundation
 
 enum PackageCodeGenerator {
-    static func generateCode(projectName: String, withUnitTest: Bool) -> String {
+    static func generateCode(projectName: String, config: Configuration) -> String {
         """
         // swift-tools-version: 5.7
 
@@ -21,14 +21,34 @@ enum PackageCodeGenerator {
                 .iOS(.v11),
             ],
             products: [
-                .library(name: "\(projectName)", targets: ["\(projectName)"]),
+        \(generateProductsCode(config: config))
             ],
             targets: [
-                .target(name: "\(projectName)"),
-            \(withUnitTest
-                ? "    .testTarget(name: \"\(projectName)Test\", dependencies: [\"\(projectName)\"])\n    ]"
-                : "]")
+        \(generateTargetsCode(config: config))
+
+                .target(name: "_Decoder", path: "Sources/_Decoder"),
+            ]
         )
         """
+    }
+
+    private static func generateProductsCode(config: Configuration) -> String {
+        config.targets
+            .map { "        .library(name: \"\($0.name)\", targets: [\"\($0.name)\"])," }
+            .joined(separator: "\n")
+    }
+
+    private static func generateTargetsCode(config: Configuration) -> String {
+        let mainTargets = config.targets
+            .map { "        .target(name: \"\($0.name)\", dependencies: [\"_Decoder\"])," }
+            .joined(separator: "\n")
+
+        let testTargets = config.withUnitTest
+          ? "\n" + config.targets
+            .map { "        .testTarget(name: \"\($0.name)Test\", dependencies: [\"\($0.name)\"])," }
+            .joined(separator: "\n")
+          : ""
+
+        return mainTargets + testTargets
     }
 }
