@@ -19,10 +19,8 @@ import Foundation
 // # The path of output directory. (Default: `./Dependencies`)
 // outputDirectory: ./Dependencies
 //
-// # In addition to environment variables, properties files can be read.
-// sources:
-//   - .env
-//   - .env.default
+// # In addition to environment variables, a properties file can be read.
+// source: .env
 //
 // # Mapping variable names to environment variable names.
 // keys:
@@ -36,10 +34,8 @@ import Foundation
 //     namespace: SharedKeys # can override namespace
 //   - name: SecretKeysDebug
 //   - name: SecretKeysProduction
-//     sources: # additional properties files can be specified
-//       - .env.production
+//     source: .env.production # can replace a properties file
 //     keys: # can override keys
-//       clientID: PRODUCTION_CLIENT_ID
 //       clientSecret: PRODUCTION_CLIENT_SECRET
 // ```
 
@@ -52,7 +48,7 @@ struct Configuration: Equatable, Codable {
     struct Target: Equatable, Codable {
         var name: String
         var namespace: String?
-        var sources: [String]?
+        var source: String?
         var keys: [String: String]?
     }
 
@@ -60,21 +56,21 @@ struct Configuration: Equatable, Codable {
     var namespace = "Keys"
     var withUnitTest = false
     var outputDirectory = "./Dependencies"
-    var sources: [String]
+    var source: String?
     var keys: [String: String]
     var targets: [Target]
 
-    func overrided(namespace: String?,
-                   withUnitTest: Bool?,
-                   outputDirectory: String?,
-                   sources: [String]?,
-                   keys: [String: String]?,
-                   targets: [Target]?) -> Configuration {
+    func overrided(namespace: String? = nil,
+                   withUnitTest: Bool? = nil,
+                   outputDirectory: String? = nil,
+                   source: String? = nil,
+                   keys: [String: String]? = nil,
+                   targets: [Target]? = nil) -> Configuration {
         Configuration(
             namespace: namespace ?? self.namespace,
             withUnitTest: withUnitTest ?? self.withUnitTest,
             outputDirectory: outputDirectory ?? self.outputDirectory,
-            sources: sources ?? self.sources,
+            source: source ?? self.source,
             keys: keys ?? self.keys,
             targets: targets ?? self.targets
         )

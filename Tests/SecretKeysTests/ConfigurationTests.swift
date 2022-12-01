@@ -27,10 +27,8 @@ final class ConfigurationDecoderTests: XCTestCase {
         # The path of output directory. (Default: `./Dependencies`)
         outputDirectory: _Keys
 
-        # In addition to environment variables, properties files can be read.
-        sources:
-          - .env
-          - .env.default
+        # In addition to environment variables, a properties file can be read.
+        source: .env.default
 
         # Mapping variable names to environment variable names.
         keys:
@@ -44,10 +42,8 @@ final class ConfigurationDecoderTests: XCTestCase {
             namespace: SharedKeys # can override namespace
           - name: SecretKeysDebug
           - name: SecretKeysProduction
-            sources: # additional properties files can be specified
-              - .env.production
+            source: .env.production # can replace a properties file
             keys: # can override keys
-              clientID: PRODUCTION_CLIENT_ID
               clientSecret: PRODUCTION_CLIENT_SECRET
         """.data(using: .utf8)!
 
@@ -57,22 +53,23 @@ final class ConfigurationDecoderTests: XCTestCase {
         XCTAssertEqual(config.namespace, "TestKeys")
         XCTAssertEqual(config.withUnitTest, true)
         XCTAssertEqual(config.outputDirectory, "_Keys")
-        XCTAssertEqual(config.sources, [
-            ".env",
-            ".env.default",
-        ])
+        XCTAssertEqual(config.source, ".env.default")
         XCTAssertEqual(config.keys, [
             "clientID": "CLIENT_ID",
             "clientSecret": "CLIENT_SECRET",
         ])
         XCTAssertEqual(config.targets.count, 3)
-        XCTAssertEqual(config.targets[0], Configuration.Target(name: "SharedSecretKeys", namespace: "SharedKeys"))
-        XCTAssertEqual(config.targets[1], Configuration.Target(name: "SecretKeysDebug"))
+        XCTAssertEqual(config.targets[0], Configuration.Target(
+            name: "SharedSecretKeys",
+            namespace: "SharedKeys"
+        ))
+        XCTAssertEqual(config.targets[1], Configuration.Target(
+            name: "SecretKeysDebug"
+        ))
         XCTAssertEqual(config.targets[2], Configuration.Target(
             name: "SecretKeysProduction",
-            sources: [".env.production"],
+            source: ".env.production",
             keys: [
-                "clientID": "PRODUCTION_CLIENT_ID",
                 "clientSecret": "PRODUCTION_CLIENT_SECRET"
             ])
         )
