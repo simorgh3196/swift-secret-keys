@@ -8,8 +8,12 @@ struct Secret: Equatable {
     let key: String
     let value: SecretValue
 
-    init(key: String, stringValue: String) {
+    init(key: String, value: SecretValue) {
         self.key = key
-        self.value = SecretValue(stringValue: stringValue)
+        self.value = value
+    }
+
+    init(key: String, stringValue: String) {
+        self.init(key: key, value: SecretValue(stringValue: stringValue))
     }
 }
