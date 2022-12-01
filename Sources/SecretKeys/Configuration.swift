@@ -35,7 +35,7 @@ import Foundation
 //   - name: SecretKeysDebug
 //   - name: SecretKeysProduction
 //     source: .env.production # can replace a properties file
-//     keys: # can override keys
+//     keys: # can override key mappings
 //       clientSecret: PRODUCTION_CLIENT_SECRET
 // ```
 

@@ -43,7 +43,7 @@ final class ConfigurationDecoderTests: XCTestCase {
           - name: SecretKeysDebug
           - name: SecretKeysProduction
             source: .env.production # can replace a properties file
-            keys: # can override keys
+            keys: # can override key mappings
               clientSecret: PRODUCTION_CLIENT_SECRET
         """.data(using: .utf8)!
 
