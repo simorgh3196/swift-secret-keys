@@ -6,7 +6,7 @@ let package = Package(
     name: "SecretKeys",
     platforms: [.macOS(.v11)],
     products: [
-        .executable(name: "secret-keys", targets: ["SecretKeys"]),
+        .executable(name: "secret-keys", targets: ["secret-keys"]),
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.2.0"),
@@ -14,13 +14,15 @@ let package = Package(
     ],
     targets: [
         .executableTarget(
-            name: "SecretKeys",
+            name: "secret-keys",
             dependencies: [
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "Yams", package: "Yams"),
-            ]),
+            ],
+            path: "Sources/SecretKeys"),
         .testTarget(
-            name: "SecretKeysTests",
-            dependencies: ["SecretKeys"]),
+            name: "anima-tests",
+            dependencies: ["secret-keys"],
+            path: "Tests/SecretKeysTests"),
     ]
 )
