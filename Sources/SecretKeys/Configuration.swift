@@ -24,34 +24,36 @@ import Foundation
 //   - .env
 //   - .env.default
 //
-// #
+// # Mapping variable names to environment variable names.
 // keys:
 //   clientID: CLIENT_ID
-//   clientSecret: CRIENT_SECRET
+//   clientSecret: CLIENT_SECRET
 //
-// #
+// # Set the target according to the environment and other requirements that
+// # you want to use different build modes, etc.
 // targets:
 //   - name: SharedSecretKeys
 //     namespace: SharedKeys # can override namespace
 //   - name: SecretKeysDebug
 //   - name: SecretKeysProduction
-//     sources: .env.production # additional properties files can be specified
+//     sources: # additional properties files can be specified
+//       - .env.production
 //     keys: # can override keys
 //       clientID: PRODUCTION_CLIENT_ID
-//       clientSecret: PRODUCTION_CRIENT_SECRET
+//       clientSecret: PRODUCTION_CLIENT_SECRET
 // ```
 
-struct Configurations: Codable {
-    enum PackageManager: String, Codable {
+struct Configuration: Equatable, Codable {
+    enum PackageManager: String, Equatable, Codable {
         case spm
         case cocoapods
     }
 
-    struct Target: Codable {
+    struct Target: Equatable, Codable {
         var name: String
         var namespace: String?
-        var sources: [String]
-        var keys: [String: String]
+        var sources: [String]?
+        var keys: [String: String]?
     }
 
     var packageManager = PackageManager.spm
@@ -67,8 +69,8 @@ struct Configurations: Codable {
                    outputDirectory: String?,
                    sources: [String]?,
                    keys: [String: String]?,
-                   targets: [Target]?) -> Configurations {
-        Configurations(
+                   targets: [Target]?) -> Configuration {
+        Configuration(
             namespace: namespace ?? self.namespace,
             withUnitTest: withUnitTest ?? self.withUnitTest,
             outputDirectory: outputDirectory ?? self.outputDirectory,
