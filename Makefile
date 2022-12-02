@@ -33,4 +33,4 @@ secret-keys.artifactbundle: .build/release/secret-keys LICENSE README.md
 	mkdir -p $(ARTIFACT_BUNDLE)/secret-keys/bin
 	sed -e 's/__VERSION__/$(VERSION)/' $(ARTIFACT_BUNDLE_INFO_TEMPLATE) > $(ARTIFACT_BUNDLE)/info.json
 	cp .build/release/secret-keys $(ARTIFACT_BUNDLE)/secret-keys/bin/
-	cp LICENSE README.md $(ARTIFACT_BUNDLE)/secret-keys/
+	cp LICENCE README.md $(ARTIFACT_BUNDLE)/secret-keys/
