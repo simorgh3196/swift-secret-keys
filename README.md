@@ -14,7 +14,7 @@ A generator that allows access to environment variables and values defined in th
     - [ ] SwiftPM plugin
     - [x] Mint
   - [ ] Generate tests for generated project
-  - [ ] Setup CI
+  - [x] Setup CI
   - [ ] Add example projects
 - [ ] Documentation
   - [ ] Add document comments
