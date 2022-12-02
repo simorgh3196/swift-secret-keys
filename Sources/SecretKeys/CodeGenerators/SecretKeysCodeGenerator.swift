@@ -35,7 +35,7 @@ enum SecretKeysCodeGenerator {
             @inline(__always)
             public static let \(secret.key): \(secret.value.type) = {
                 let encodedBytes: [UInt8] = [
-                    \(convertBytesTo16RadixString(from: encoder.encode(secret: secret, with: salt)))
+                    \(convertBytesTo16RadixString(from: encoder.encode(value: secret.value, with: salt)))
                 ]
                 return try! Self.decoder.decode(bytes: encodedBytes, with: Self.salt)
             }()

@@ -5,8 +5,9 @@
 import Foundation
 
 struct SecretValueEncoder {
-    func encode(secret: Secret, with salt: [UInt8]) -> [UInt8] {
-        Array(secret.value.stringValue.utf8CString)
+    func encode(value: SecretValue, with salt: [UInt8]) -> [UInt8] {
+        value.stringValue
+            .utf8CString
             .map(UInt8.init)
             .enumerated()
             .map { index, byte in
