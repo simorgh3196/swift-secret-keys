@@ -12,9 +12,10 @@ A generator that allows access to environment variables and values defined in th
   - [ ] Add tests for tool
   - [ ] Add installation methods
     - [ ] SwiftPM plugin
-    - [ ] Mint
+    - [x] Mint
   - [ ] Generate tests for generated project
   - [ ] Setup CI
+  - [ ] Add example projects
 - [ ] Documentation
   - [ ] Add document comments
   - [ ] Suport DocC
@@ -22,10 +23,9 @@ A generator that allows access to environment variables and values defined in th
 
 ## Configuration File
 
-```yaml
-# Select the package manager to use from `spm` or `cocoapods`. (Default: `spm`)
-packageManager: spm
+`.secretkeys.yml`
 
+```yaml
 # Determine the name of the struct. (Default: `Keys`)
 namespace: Keys
 
@@ -53,4 +53,32 @@ targets:
     source: .env.production # can replace a properties file
     keys: # can override key mappings
       clientSecret: PRODUCTION_CLIENT_SECRET
+```
+
+## Installation
+
+### [Mint](https://github.com/yonaskolb/Mint)
+
+```sh
+mint install simorgh3196/SecretKeys
+```
+
+## Getting Started
+
+Add the config file to your project and call the generate command.
+
+```sh
+secret-keys generate
+```
+
+```
+USAGE: secret-keys generate [--config <config>] [--env <env>] [--output <output>] [--verbose]
+
+OPTIONS:
+  -c, --config <config>   The path to the configuration file (default: .secretkeys.yml)
+  -e, --env <env>         The path to the file that contains environment variables
+  -o, --output <output>   The path of output directory
+  --verbose               Enables verbose log messages
+  --version               Show the version.
+  -h, --help              Show help information.
 ```

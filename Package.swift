@@ -4,13 +4,18 @@ import PackageDescription
 
 let package = Package(
     name: "SecretKeys",
-    platforms: [.macOS(.v11)],
+    platforms: [
+        .iOS(.v11),
+        .macOS(.v11),
+        .tvOS(.v11),
+        .watchOS(.v4),
+    ],
     products: [
         .executable(name: "secret-keys", targets: ["secret-keys"]),
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.2.0"),
-        .package(url: "https://github.com/jpsim/Yams.git", from: "5.0.1"),
+        .package(url: "https://github.com/jpsim/Yams", from: "5.0.1"),
     ],
     targets: [
         .executableTarget(
@@ -21,7 +26,7 @@ let package = Package(
             ],
             path: "Sources/SecretKeys"),
         .testTarget(
-            name: "anima-tests",
+            name: "secret-keys-tests",
             dependencies: ["secret-keys"],
             path: "Tests/SecretKeysTests"),
     ]

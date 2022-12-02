@@ -8,7 +8,7 @@ import Yams
 
 struct Generate: ParsableCommand {
     @Option(name: [.short, .customLong("config")],
-            help: "The path to the configuration file for `SecretKeys`")
+            help: "The path to the configuration file")
     var configurationFilePath = ".secretkeys.yml"
 
     @Option(name: [.short, .customLong("env")],
@@ -32,6 +32,7 @@ struct Generate: ParsableCommand {
             outputDirectory: outputDirectoryPath,
             source: environmentFilePath
         )
+        Logger.log(.debug, "Config: \(config)")
 
         try generateProject(with: config)
     }
@@ -43,7 +44,6 @@ struct Generate: ParsableCommand {
         Logger.log(.debug, "Parsing properties")
         let secrets = try PropertiesFileDecoder().decode(content: envFileContent)
 
-        let secretsLog = secrets.map { "\($0.key): \($0.value.stringValue)" }.joined(separator: ", ")
         Logger.log(.debug, "Success to load properties")
 
         return secrets
@@ -68,11 +68,17 @@ struct Generate: ParsableCommand {
         }
 
         do {
+            let code = SecretValueDecoderPodspecCodeGenerator.generateCode()
+            try FileIO.writeFile(content: code, toDirectoryPath: projectPath, fileName: "SecretValueDecoder.podspec")
+            Logger.log(.debug, "Success to generate swift code: \(projectPath)/SecretValueDecoder.podspec")
+        }
+
+        do {
             let code = SecretValueDecoderCodeGenerator.generateCode()
             try FileIO.writeFile(content: code,
-                                 toDirectoryPath: projectPath + "/Sources/_Decoder",
+                                 toDirectoryPath: projectPath + "/Sources/SecretValueDecoder",
                                  fileName: "SecretValueDecoder.swift")
-            Logger.log(.debug, "Success to generate: \(projectPath)/Sources/_Decoder/SecretValueDecoder.swift")
+            Logger.log(.debug, "Success to generate: \(projectPath)/Sources/SecretValueDecoder/SecretValueDecoder.swift")
         }
 
         try generateTargets(projectPath: projectPath, with: config)
@@ -115,6 +121,10 @@ struct Generate: ParsableCommand {
                                      fileName: "SecretKeys.swift")
                 Logger.log(.debug, "Success to generate: \(projectPath)/Sources/\(target.name)/SecretKeys.swift")
             }
+
+            let code = TargetPodspecCodeGenerator.generateCode(target: target)
+            try FileIO.writeFile(content: code, toDirectoryPath: projectPath, fileName: "\(target.name).podspec")
+            Logger.log(.debug, "Success to generate swift code: \(projectPath)/\(target.name).podspec")
         }
     }
 }

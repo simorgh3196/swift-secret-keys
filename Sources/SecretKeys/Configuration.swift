@@ -39,12 +39,7 @@ import Foundation
 //       clientSecret: PRODUCTION_CLIENT_SECRET
 // ```
 
-struct Configuration: Equatable, Codable {
-    enum PackageManager: String, Equatable, Codable {
-        case spm
-        case cocoapods
-    }
-
+struct Configuration: Equatable {
     struct Target: Equatable, Codable {
         var name: String
         var namespace: String?
@@ -52,10 +47,18 @@ struct Configuration: Equatable, Codable {
         var keys: [String: String]?
     }
 
-    var packageManager = PackageManager.spm
-    var namespace = "Keys"
-    var withUnitTest = false
-    var outputDirectory = "./Dependencies"
+    enum CodingKeys: CodingKey {
+        case namespace
+        case withUnitTest
+        case outputDirectory
+        case source
+        case keys
+        case targets
+    }
+
+    var namespace: String
+    var withUnitTest: Bool
+    var outputDirectory: String
     var source: String?
     var keys: [String: String]
     var targets: [Target]
@@ -74,5 +77,17 @@ struct Configuration: Equatable, Codable {
             keys: keys ?? self.keys,
             targets: targets ?? self.targets
         )
+    }
+}
+
+extension Configuration: Codable {
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.namespace = try container.decodeIfPresent(String.self, forKey: .namespace) ?? "Keys"
+        self.withUnitTest = try container.decodeIfPresent(Bool.self, forKey: .withUnitTest) ?? false
+        self.outputDirectory = try container.decodeIfPresent(String.self, forKey: .outputDirectory) ?? "./Dependencies"
+        self.source = try container.decodeIfPresent(String.self, forKey: .source)
+        self.keys = try container.decodeIfPresent([String : String].self, forKey: .keys) ?? [:]
+        self.targets = try container.decode([Configuration.Target].self, forKey: .targets)
     }
 }

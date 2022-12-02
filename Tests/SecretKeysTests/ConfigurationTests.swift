@@ -13,43 +13,43 @@ final class ConfigurationDecoderTests: XCTestCase {
         decoder = YAMLDecoder()
     }
 
-    func testDecodeConfiguration() throws {
+    func testDecodeConfigurationDefaultValues() throws {
         let configYamlData = """
-        # Select the package manager to use from `spm` or `cocoapods`. (Default: `spm`)
-        packageManager: spm
+        targets:
+          - name: SecretKeys
+        """
 
-        # Determine the name of the struct. (Default: `Keys`)
+        let config = try decoder.decode(Configuration.self, from: configYamlData)
+
+        XCTAssertEqual(config.namespace, "Keys")
+        XCTAssertEqual(config.withUnitTest, false)
+        XCTAssertEqual(config.outputDirectory, "./Dependencies")
+        XCTAssertEqual(config.source, nil)
+        XCTAssertEqual(config.keys, [:])
+        XCTAssertEqual(config.targets, [Configuration.Target(name: "SecretKeys")])
+    }
+
+    func testDecodeConfigurationCustomValues() throws {
+        let configYamlData = """
         namespace: TestKeys
-
-        # Also generate unit tests for accessing keys. (Default: `false`)
         withUnitTest: true
-
-        # The path of output directory. (Default: `./Dependencies`)
         outputDirectory: _Keys
-
-        # In addition to environment variables, a properties file can be read.
         source: .env.default
-
-        # Mapping variable names to environment variable names.
         keys:
           clientID: CLIENT_ID
           clientSecret: CLIENT_SECRET
-
-        # Set the target according to the environment and other requirements that
-        # you want to use different build modes, etc.
         targets:
           - name: SharedSecretKeys
-            namespace: SharedKeys # can override namespace
+            namespace: SharedKeys
           - name: SecretKeysDebug
           - name: SecretKeysProduction
-            source: .env.production # can replace a properties file
-            keys: # can override key mappings
+            source: .env.production
+            keys:
               clientSecret: PRODUCTION_CLIENT_SECRET
         """.data(using: .utf8)!
 
         let config = try decoder.decode(Configuration.self, from: configYamlData)
 
-        XCTAssertEqual(config.packageManager, .spm)
         XCTAssertEqual(config.namespace, "TestKeys")
         XCTAssertEqual(config.withUnitTest, true)
         XCTAssertEqual(config.outputDirectory, "_Keys")
