@@ -25,18 +25,6 @@ struct Generate: ParsableCommand {
         try generateProject(with: config)
     }
 
-    private func loadSecrets(environmentFilePath: String) throws -> [Secret] {
-        Logger.log(.info, "Loading properties from \(environmentFilePath)")
-        let envFileContent = try FileIO.readFileContents(for: environmentFilePath)
-
-        Logger.log(.debug, "Parsing properties")
-        let secrets = try PropertiesFileDecoder().decode(content: envFileContent)
-
-        Logger.log(.debug, "Success to load properties")
-
-        return secrets
-    }
-
     private func generateProject(with config: Configuration) throws {
         let projectName = "SecretKeys"
         let projectPath = "\(config.outputDirectory)/\(projectName)"
@@ -75,33 +63,23 @@ struct Generate: ParsableCommand {
     }
 
     private func generateTargets(projectPath: String, with config: Configuration) throws {
-        var secretFiles: [String: [Secret]] = [:]
-        if let source = config.source {
-            secretFiles[source] = try loadSecrets(environmentFilePath: source)
-        }
-        try config.targets.compactMap(\.source).forEach { source in
-            secretFiles[source] = try loadSecrets(environmentFilePath: source)
-        }
+        let loader = SecretLoader()
 
         for target in config.targets {
-            let secrets = (target.source.flatMap { secretFiles[$0] } ?? []) + (config.source.flatMap { secretFiles[$0] } ?? [])
+            let sources = [target.source, config.source].compactMap { $0 }
 
-            let requiredKeyMaps = config.keys.merging(target.keys ?? [:],
-                                                      uniquingKeysWith: { _, keyInTarget in keyInTarget })
-
-            let mappedSecrets = try requiredKeyMaps.map { keyMap in
-                guard let secret = secrets.first(where: { $0.key == keyMap.value }) else {
-                    throw NSError() // TODO:
+            let secrets = try config.keys
+                .merging(target.keys ?? [:], uniquingKeysWith: { _, keyInTarget in keyInTarget })
+                .map { keyMap in
+                    let rawSecret = try loader.loadSecret(forKey: keyMap.value, from: sources)
+                    return Secret(key: keyMap.key, value: rawSecret.value)
                 }
-
-                return Secret(key: keyMap.key, value: secret.value)
-            }
 
             do {
                 let salt = try SaltGenerator.generate()
 
                 let code = SecretKeysCodeGenerator.generateCode(namespace: target.namespace ?? config.namespace,
-                                                                secrets: mappedSecrets,
+                                                                secrets: secrets,
                                                                 salt: salt,
                                                                 encoder: SecretValueEncoder())
                 try FileIO.writeFile(content: code,
