@@ -7,7 +7,7 @@ A generator that allows access to environment variables and values defined in th
 ## Plan
 
 - [ ] Features
-  - [ ] Loading environment from process
+  - [x] Loading environment from process
   - [x] Change behavior by configuration file
   - [ ] Add tests for tool
   - [ ] Add installation methods
