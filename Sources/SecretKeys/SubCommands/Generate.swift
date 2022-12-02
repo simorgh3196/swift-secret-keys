@@ -62,6 +62,12 @@ struct Generate: ParsableCommand {
         }
 
         do {
+            let code = SecretValueDecoderPodspecCodeGenerator.generateCode()
+            try FileIO.writeFile(content: code, toDirectoryPath: projectPath, fileName: "SecretValueDecoder.podspec")
+            Logger.log(.debug, "Success to generate swift code: \(projectPath)/SecretValueDecoder.podspec")
+        }
+
+        do {
             let code = SecretValueDecoderCodeGenerator.generateCode()
             try FileIO.writeFile(content: code,
                                  toDirectoryPath: projectPath + "/Sources/SecretValueDecoder",
@@ -109,6 +115,10 @@ struct Generate: ParsableCommand {
                                      fileName: "SecretKeys.swift")
                 Logger.log(.debug, "Success to generate swift code: \(projectPath)/Sources/\(target.name)/SecretKeys.swift")
             }
+
+            let code = TargetPodspecCodeGenerator.generateCode(target: target)
+            try FileIO.writeFile(content: code, toDirectoryPath: projectPath, fileName: "\(target.name).podspec")
+            Logger.log(.debug, "Success to generate swift code: \(projectPath)/\(target.name).podspec")
         }
     }
 }
