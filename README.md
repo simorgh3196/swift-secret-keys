@@ -23,10 +23,9 @@ A generator that allows access to environment variables and values defined in th
 
 ## Configuration File
 
-```yaml
-# Select the package manager to use from `spm` or `cocoapods`. (Default: `spm`)
-packageManager: spm
+`.secretkeys.yml`
 
+```yaml
 # Determine the name of the struct. (Default: `Keys`)
 namespace: Keys
 
