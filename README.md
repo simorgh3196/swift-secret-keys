@@ -18,7 +18,7 @@ A generator that allows access to environment variables and values defined in th
   - [ ] Add example projects
 - [ ] Documentation
   - [ ] Add document comments
-  - [ ] Suport DocC
+  - [ ] Support DocC
   - [ ] Enhance README
 
 ## Configuration File
