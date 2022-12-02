@@ -56,9 +56,15 @@ struct Generate: ParsableCommand {
         try FileIO.cleanDirectory(path: projectPath)
 
         do {
+            let code = GitignoreCodeGenerator.generateCode()
+            try FileIO.writeFile(content: code, toDirectoryPath: projectPath, fileName: ".gitignore")
+            Logger.log(.debug, "Success to generate: \(projectPath)/.gitignore")
+        }
+
+        do {
             let code = PackageCodeGenerator.generateCode(projectName: projectName, config: config)
             try FileIO.writeFile(content: code, toDirectoryPath: projectPath, fileName: "Package.swift")
-            Logger.log(.debug, "Success to generate swift code: \(projectPath)/Package.swift")
+            Logger.log(.debug, "Success to generate: \(projectPath)/Package.swift")
         }
 
         do {
@@ -72,7 +78,7 @@ struct Generate: ParsableCommand {
             try FileIO.writeFile(content: code,
                                  toDirectoryPath: projectPath + "/Sources/SecretValueDecoder",
                                  fileName: "SecretValueDecoder.swift")
-            Logger.log(.debug, "Success to generate swift code: \(projectPath)/Sources/SecretValueDecoder/SecretValueDecoder.swift")
+            Logger.log(.debug, "Success to generate: \(projectPath)/Sources/SecretValueDecoder/SecretValueDecoder.swift")
         }
 
         try generateTargets(projectPath: projectPath, with: config)
@@ -113,7 +119,7 @@ struct Generate: ParsableCommand {
                 try FileIO.writeFile(content: code,
                                      toDirectoryPath: projectPath + "/Sources/\(target.name)",
                                      fileName: "SecretKeys.swift")
-                Logger.log(.debug, "Success to generate swift code: \(projectPath)/Sources/\(target.name)/SecretKeys.swift")
+                Logger.log(.debug, "Success to generate: \(projectPath)/Sources/\(target.name)/SecretKeys.swift")
             }
 
             let code = TargetPodspecCodeGenerator.generateCode(target: target)
