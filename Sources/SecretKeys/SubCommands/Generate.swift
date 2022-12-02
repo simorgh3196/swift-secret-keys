@@ -44,7 +44,6 @@ struct Generate: ParsableCommand {
         Logger.log(.debug, "Parsing properties")
         let secrets = try PropertiesFileDecoder().decode(content: envFileContent)
 
-        let secretsLog = secrets.map { "\($0.key): \($0.value.stringValue)" }.joined(separator: ", ")
         Logger.log(.debug, "Success to load properties")
 
         return secrets
