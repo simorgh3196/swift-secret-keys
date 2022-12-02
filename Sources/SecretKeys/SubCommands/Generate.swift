@@ -8,7 +8,7 @@ import Yams
 
 struct Generate: ParsableCommand {
     @Option(name: [.short, .customLong("config")],
-            help: "The path to the configuration file for `SecretKeys`")
+            help: "The path to the configuration file")
     var configurationFilePath = ".secretkeys.yml"
 
     @Option(name: [.short, .customLong("env")],
