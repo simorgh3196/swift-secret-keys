@@ -1,0 +1,15 @@
+{
+    "schemaVersion": "1.0",
+    "artifacts": {
+        "secret-keys": {
+            "version": "__VERSION__",
+            "type": "executable",
+            "variants": [
+                {
+                    "path": "secret-keys/bin/secret-keys",
+                    "supportedTriples": ["x86_64-apple-macosx", "arm64-apple-macosx"]
+                }
+            ]
+        }
+    }
+}
