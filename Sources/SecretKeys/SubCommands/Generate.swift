@@ -64,9 +64,9 @@ struct Generate: ParsableCommand {
         do {
             let code = SecretValueDecoderCodeGenerator.generateCode()
             try FileIO.writeFile(content: code,
-                                 toDirectoryPath: projectPath + "/Sources/_Decoder",
+                                 toDirectoryPath: projectPath + "/Sources/SecretValueDecoder",
                                  fileName: "SecretValueDecoder.swift")
-            Logger.log(.debug, "Success to generate swift code: \(projectPath)/Sources/_Decoder/SecretValueDecoder.swift")
+            Logger.log(.debug, "Success to generate swift code: \(projectPath)/Sources/SecretValueDecoder/SecretValueDecoder.swift")
         }
 
         try generateTargets(projectPath: projectPath, with: config)

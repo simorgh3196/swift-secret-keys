@@ -26,7 +26,7 @@ enum PackageCodeGenerator {
             targets: [
         \(generateTargetsCode(config: config))
 
-                .target(name: "_Decoder", path: "Sources/_Decoder"),
+                .target(name: "SecretValueDecoder", path: "Sources/SecretValueDecoder"),
             ]
         )
         """
@@ -40,7 +40,7 @@ enum PackageCodeGenerator {
 
     private static func generateTargetsCode(config: Configuration) -> String {
         let mainTargets = config.targets
-            .map { "        .target(name: \"\($0.name)\", dependencies: [\"_Decoder\"])," }
+            .map { "        .target(name: \"\($0.name)\", dependencies: [\"SecretValueDecoder\"])," }
             .joined(separator: "\n")
 
         let testTargets = config.withUnitTest
