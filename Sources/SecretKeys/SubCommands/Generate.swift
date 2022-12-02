@@ -70,7 +70,7 @@ struct Generate: ParsableCommand {
 
             let secrets = try config.keys
                 .merging(target.keys ?? [:], uniquingKeysWith: { _, keyInTarget in keyInTarget })
-                .map { keyMap in
+                .map { keyMap -> Secret in
                     let rawSecret = try loader.loadSecret(forKey: keyMap.value, from: sources)
                     return Secret(key: keyMap.key, value: rawSecret.value)
                 }
