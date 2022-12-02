@@ -72,12 +72,10 @@ secret-keys generate
 ```
 
 ```
-USAGE: secret-keys generate [--config <config>] [--env <env>] [--output <output>] [--verbose]
+USAGE: secret-keys generate [--config <config>] [--verbose]
 
 OPTIONS:
   -c, --config <config>   The path to the configuration file (default: .secretkeys.yml)
-  -e, --env <env>         The path to the file that contains environment variables
-  -o, --output <output>   The path of output directory
   --verbose               Enables verbose log messages
   --version               Show the version.
   -h, --help              Show help information.
