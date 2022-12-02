@@ -62,22 +62,6 @@ struct Configuration: Equatable {
     var source: String?
     var keys: [String: String]
     var targets: [Target]
-
-    func overrided(namespace: String? = nil,
-                   withUnitTest: Bool? = nil,
-                   outputDirectory: String? = nil,
-                   source: String? = nil,
-                   keys: [String: String]? = nil,
-                   targets: [Target]? = nil) -> Configuration {
-        Configuration(
-            namespace: namespace ?? self.namespace,
-            withUnitTest: withUnitTest ?? self.withUnitTest,
-            outputDirectory: outputDirectory ?? self.outputDirectory,
-            source: source ?? self.source,
-            keys: keys ?? self.keys,
-            targets: targets ?? self.targets
-        )
-    }
 }
 
 extension Configuration: Codable {

@@ -11,15 +11,6 @@ struct Generate: ParsableCommand {
             help: "The path to the configuration file")
     var configurationFilePath = ".secretkeys.yml"
 
-    @Option(name: [.short, .customLong("env")],
-            help: "The path to the file that contains environment variables")
-    var environmentFilePath: String?
-
-    @Option(name: [.short, .customLong("output")],
-            help: "The path of output directory",
-            completion: .directory)
-    var outputDirectoryPath: String?
-
     @Flag(name: .long,
           help: "Enables verbose log messages")
     var verbose = false
@@ -28,10 +19,7 @@ struct Generate: ParsableCommand {
         Logger.log(.debug, "Run `Generate` command")
 
         let configData = try FileIO.readFileContents(for: configurationFilePath).data(using: .utf8)!
-        let config = try YAMLDecoder().decode(Configuration.self, from: configData).overrided(
-            outputDirectory: outputDirectoryPath,
-            source: environmentFilePath
-        )
+        let config = try YAMLDecoder().decode(Configuration.self, from: configData)
         Logger.log(.debug, "Config: \(config)")
 
         try generateProject(with: config)
