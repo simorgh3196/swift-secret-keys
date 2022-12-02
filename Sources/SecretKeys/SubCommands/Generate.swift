@@ -32,6 +32,7 @@ struct Generate: ParsableCommand {
             outputDirectory: outputDirectoryPath,
             source: environmentFilePath
         )
+        Logger.log(.debug, "Config: \(config)")
 
         try generateProject(with: config)
     }
