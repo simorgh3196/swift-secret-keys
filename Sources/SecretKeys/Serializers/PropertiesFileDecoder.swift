@@ -48,24 +48,11 @@ struct PropertiesFileDecoder {
 
             // if the string contains `=`, it has been split, so join and restore
             let mergedValue = keyAndValue[1...].joined(separator: "=")
-            let value = removeSurroundedQuartsIfNeeded(mergedValue.trimmingCharacters(in: .whitespaces))
+            let value = mergedValue
+                .trimmingCharacters(in: .whitespaces)
+                .trimmingCharacters(in: .init(charactersIn: "\"'`"))
 
             return Secret(key: key, stringValue: value)
         }
-    }
-
-    @inline(__always)
-    private func removeSurroundedQuartsIfNeeded(_ text: String) -> String {
-        var result = text
-        let isSurroundedByDoubleQuarts = result.hasPrefix("\"") && result.hasSuffix("\"")
-        let isSurroundedBySingleQuarts = result.hasPrefix("'") && result.hasSuffix("'")
-        let isSurroundedByBackQuarts = result.hasPrefix("`") && result.hasSuffix("`")
-        if isSurroundedByDoubleQuarts || isSurroundedBySingleQuarts || isSurroundedByBackQuarts {
-            // remove quarts
-            result.removeFirst(1)
-            result.removeLast(1)
-        }
-
-        return result
     }
 }
