@@ -12,7 +12,7 @@ final class SecretLoader {
     private var cachedFiles: [String: [Secret]] = [:]
 
     func loadSecret(forKey key: String, from source: String?) throws -> Secret {
-        if let source, let secret = try loadSecrets(source: source).first(where: { $0.key == key }) {
+        if let source = source, let secret = try loadSecrets(source: source).first(where: { $0.key == key }) {
             return secret
         }
 
