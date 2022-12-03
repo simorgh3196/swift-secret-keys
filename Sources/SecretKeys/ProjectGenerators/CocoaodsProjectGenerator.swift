@@ -51,9 +51,7 @@ enum CocoaodsProjectGenerator {
     }
 
     private static func writeCode(_ content: String, path: String, fileName: String) throws {
-        try FileIO.writeFile(content: content,
-                             toDirectoryPath: "\(path)/\(fileName)",
-                             fileName: fileName)
+        try FileIO.writeFile(content: content, toDirectoryPath: path, fileName: fileName)
         Logger.log(.debug, "Success to generate: \(path)/\(fileName)")
     }
 }
