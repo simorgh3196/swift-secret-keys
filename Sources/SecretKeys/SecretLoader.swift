@@ -8,14 +8,12 @@ enum SecretLoadingError: Error {
     case secretNotFound(key: String)
 }
 
-class SecretLoader {
-    private var secretFiles: [String: [Secret]] = [:]
+final class SecretLoader {
+    private var cachedFiles: [String: [Secret]] = [:]
 
-    func loadSecret(forKey key: String, from sources: [String]) throws -> Secret {
-        for source in sources {
-            if let secret = try loadSecrets(source: source).first(where: { $0.key == key }) {
-                return secret
-            }
+    func loadSecret(forKey key: String, from source: String?) throws -> Secret {
+        if let source, let secret = try loadSecrets(source: source).first(where: { $0.key == key }) {
+            return secret
         }
 
         if let env = ProcessInfo.processInfo.environment.first(where: { $0.key == key }) {
@@ -27,7 +25,7 @@ class SecretLoader {
 
     private func loadSecrets(source: String) throws -> [Secret] {
         // return cache if cache is available
-        if let secrets = secretFiles[source] {
+        if let secrets = cachedFiles[source] {
             return secrets
         }
 
@@ -40,7 +38,7 @@ class SecretLoader {
         Logger.log(.debug, "Success to load properties")
 
         // cache secrets
-        secretFiles[source] = secrets
+        cachedFiles[source] = secrets
 
         return secrets
     }
