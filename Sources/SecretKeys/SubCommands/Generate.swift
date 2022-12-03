@@ -11,7 +11,7 @@ struct Generate: ParsableCommand {
             help: "The path to the configuration file")
     var configurationFilePath = ".secretkeys.yml"
 
-    @Flag(name: .long,
+    @Flag(name: .shortAndLong,
           help: "Enables verbose log messages")
     var verbose = false
 
