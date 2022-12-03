@@ -16,7 +16,7 @@ struct Generate: ParsableCommand {
     var verbose = false
 
     func run() throws {
-        Logger.log(.debug, "Run `Generate` command")
+        Logger.log(.debug, "Run generate command")
 
         let configData = try FileIO.readFileContents(for: configurationFilePath).data(using: .utf8)!
         let config = try YAMLDecoder().decode(Configuration.self, from: configData)
