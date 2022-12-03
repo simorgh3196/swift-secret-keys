@@ -22,6 +22,11 @@ struct Generate: ParsableCommand {
         let config = try YAMLDecoder().decode(Configuration.self, from: configData)
         Logger.log(.debug, "Config: \(config)")
 
-        try SwiftpmProjectGenerator.generate(with: config)
+        switch config.exportType {
+        case .swiftpm:
+            try SwiftpmProjectGenerator.generate(with: config)
+        case .cocoapods:
+            try CocoaodsProjectGenerator.generate(with: config)
+        }
     }
 }

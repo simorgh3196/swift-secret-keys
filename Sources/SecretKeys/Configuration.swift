@@ -7,8 +7,8 @@ import Foundation
 // Configuration file interface:
 //
 // ```yaml:.secretkeys.yml
-// # Select the package manager to use from `spm` or `cocoapods`. (Default: `spm`)
-// packageManager: spm
+// # Select the export type from `swiftpm` or `cocoapods`. (Default: `swiftpm`)
+// exportType: swiftpm
 //
 // # Determine the name of the struct. (Default: `Keys`)
 // namespace: Keys
@@ -40,6 +40,11 @@ import Foundation
 // ```
 
 struct Configuration: Equatable {
+    enum ExportType: String, Equatable, Codable {
+        case swiftpm
+        case cocoapods
+    }
+
     struct Target: Equatable, Codable {
         var name: String
         var namespace: String?
@@ -48,6 +53,7 @@ struct Configuration: Equatable {
     }
 
     enum CodingKeys: CodingKey {
+        case exportType
         case namespace
         case withUnitTest
         case outputDirectory
@@ -56,6 +62,7 @@ struct Configuration: Equatable {
         case targets
     }
 
+    var exportType: ExportType
     var namespace: String
     var withUnitTest: Bool
     var outputDirectory: String
@@ -67,6 +74,7 @@ struct Configuration: Equatable {
 extension Configuration: Codable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.exportType = try container.decodeIfPresent(ExportType.self, forKey: .exportType) ?? .swiftpm
         self.namespace = try container.decodeIfPresent(String.self, forKey: .namespace) ?? "Keys"
         self.withUnitTest = try container.decodeIfPresent(Bool.self, forKey: .withUnitTest) ?? false
         self.outputDirectory = try container.decodeIfPresent(String.self, forKey: .outputDirectory) ?? "./Dependencies"

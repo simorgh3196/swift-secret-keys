@@ -26,6 +26,9 @@ A generator that allows access to environment variables and values defined in th
 `.secretkeys.yml`
 
 ```yaml
+# Select the export type from `swiftpm` or `cocoapods`. (Default: `swiftpm`)
+exportType: swiftpm
+
 # Determine the name of the struct. (Default: `Keys`)
 namespace: Keys
 
