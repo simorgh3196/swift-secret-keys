@@ -4,7 +4,7 @@
 
 import Foundation
 
-struct CocoaodsProjectGenerator {
+enum CocoaodsProjectGenerator {
     static func generate(with config: Configuration) throws {
         let projectName = "SecretKeys"
         let projectPath = "\(config.outputDirectory)/\(projectName)"
