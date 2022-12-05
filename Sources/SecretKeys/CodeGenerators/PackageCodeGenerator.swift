@@ -17,8 +17,10 @@ enum PackageCodeGenerator {
         let package = Package(
             name: "\(projectName)",
             platforms: [
-                .macOS(.v11),
                 .iOS(.v11),
+                .macOS(.v11),
+                .tvOS(.v11),
+                .watchOS(.v4),
             ],
             products: [
         \(generateProductsCode(config: config))

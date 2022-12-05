@@ -4,27 +4,13 @@
 
 import Foundation
 
-enum CocoaodsProjectGenerator {
+enum SourcesOnlyGenerator {
     static func generate(with config: Configuration) throws {
-        let projectName = "_SecretKeys"
-        let projectPath = "\(config.outputDirectory)/\(projectName)"
-        let projectSourcePath = "\(projectPath)/Sources"
-
-        try FileIO.cleanDirectory(path: projectPath)
-
         try writeCode(GitignoreCodeGenerator.generateCode(),
-                      path: projectPath,
+                      path: config.outputDirectory,
                       fileName: ".gitignore")
         try writeCode(SecretValueDecoderPodspecCodeGenerator.generateCode(),
-                      path: projectPath,
-                      fileName: "SecretValueDecoder.podspec")
-        for target in config.targets {
-            try writeCode(TargetPodspecCodeGenerator.generateCode(target: target),
-                          path: projectPath,
-                          fileName: "\(target.name).podspec")
-        }
-        try writeCode(SecretValueDecoderPodspecCodeGenerator.generateCode(),
-                      path: "\(projectSourcePath)/SecretValueDecoder",
+                      path: "\(config.outputDirectory)/SecretValueDecoder",
                       fileName: "SecretValueDecoder.swift")
 
         let loader = SecretLoader()
@@ -40,15 +26,18 @@ enum CocoaodsProjectGenerator {
             }
 
             let salt = try SaltGenerator.generate()
-            let code = SecretKeysCodeGenerator.generateCode(namespace: target.namespace ?? config.namespace,
+            let namespace = target.namespace ?? config.namespace
+            let code = SecretKeysCodeGenerator.generateCode(namespace: namespace,
                                                             secrets: secrets,
                                                             salt: salt,
                                                             encoder: valueEncoder,
-                                                            importDecoder: true)
+                                                            importDecoder: false)
             try writeCode(code,
-                          path: "\(projectSourcePath)/\(target.name)",
-                          fileName: "SecretKeys.swift")
+                          path: "\(config.outputDirectory)/\(target.name)",
+                          fileName: "\(namespace).generated.swift")
         }
+
+        Logger.log(.info, "✨ Project generated to \(config.outputDirectory)")
     }
 
     private static func writeCode(_ content: String, path: String, fileName: String) throws {

@@ -27,6 +27,8 @@ struct Generate: ParsableCommand {
             try SwiftpmProjectGenerator.generate(with: config)
         case .cocoapods:
             try CocoaodsProjectGenerator.generate(with: config)
+        case .sourcesOnly:
+            try SourcesOnlyGenerator.generate(with: config)
         }
     }
 }

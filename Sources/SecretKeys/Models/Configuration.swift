@@ -7,7 +7,7 @@ import Foundation
 // Configuration file interface:
 //
 // ```yaml:.secretkeys.yml
-// # Select the export type from `swiftpm` or `cocoapods`. (Default: `swiftpm`)
+// # Select the export type from `swiftpm`, `cocoapods` or `sourcesOnly`. (Default: `swiftpm`)
 // exportType: swiftpm
 //
 // # Determine the name of the struct. (Default: `Keys`)
@@ -43,6 +43,7 @@ struct Configuration: Equatable {
     enum ExportType: String, Equatable, Codable {
         case swiftpm
         case cocoapods
+        case sourcesOnly
     }
 
     struct Target: Equatable, Codable {
@@ -79,7 +80,7 @@ extension Configuration: Codable {
         self.withUnitTest = try container.decodeIfPresent(Bool.self, forKey: .withUnitTest) ?? false
         self.outputDirectory = try container.decodeIfPresent(String.self, forKey: .outputDirectory) ?? "./Dependencies"
         self.source = try container.decodeIfPresent(String.self, forKey: .source)
-        self.keys = try container.decodeIfPresent([String : String].self, forKey: .keys) ?? [:]
+        self.keys = try container.decodeIfPresent([String: String].self, forKey: .keys) ?? [:]
         self.targets = try container.decode([Configuration.Target].self, forKey: .targets)
     }
 }
