@@ -7,8 +7,8 @@ import Foundation
 enum GitignoreCodeGenerator {
     static func generateCode() -> String {
         """
-        *.swift
-        !Package.swift
+        SecretKeys.swift
+        *.generated.swift
         """
     }
 }

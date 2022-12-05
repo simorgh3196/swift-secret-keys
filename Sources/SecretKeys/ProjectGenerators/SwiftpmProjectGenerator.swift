@@ -6,7 +6,7 @@ import Foundation
 
 enum SwiftpmProjectGenerator {
     static func generate(with config: Configuration) throws {
-        let projectName = "SecretKeys"
+        let projectName = "_SecretKeys"
         let projectPath = "\(config.outputDirectory)/\(projectName)"
         let projectSourcePath = "\(projectPath)/Sources"
 
@@ -38,7 +38,8 @@ enum SwiftpmProjectGenerator {
             let code = SecretKeysCodeGenerator.generateCode(namespace: target.namespace ?? config.namespace,
                                                             secrets: secrets,
                                                             salt: salt,
-                                                            encoder: valueEncoder)
+                                                            encoder: valueEncoder,
+                                                            importDecoder: true)
             try writeCode(code,
                           path: "\(projectSourcePath)/\(target.name)",
                           fileName: "SecretKeys.swift")
