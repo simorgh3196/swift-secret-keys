@@ -1,0 +1,10 @@
+included:
+  - Sources
+  - Tests
+
+disabled_rules:
+  - trailing_comma
+  - line_length
+
+opt_in_rules:
+  - sorted_imports

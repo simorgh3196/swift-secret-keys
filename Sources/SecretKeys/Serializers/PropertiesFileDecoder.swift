@@ -10,6 +10,11 @@ enum PropertiesFileDecodingError: Error {
 }
 
 struct PropertiesFileDecoder {
+    // use regular expressions used in dotenv
+    // https://github.com/motdotla/dotenv/blob/463952012640a919a82be0de11f473c1224b498a/lib/main.js#L8
+    // swiftlint:disable:next line_length
+    private let regexPattern = #"(?:^|^)\s*(?:export\s+)?([\w.-]+)(?:\s*=\s*?|:\s+?)(\s*'(?:\\'|[^'])*'|\s*"(?:\\"|[^"])*"|\s*`(?:\\`|[^`])*`|[^#\r\n]+)?\s*(?:#.*)?(?:$|$)"#
+
     func decode(content: String) throws -> [Secret] {
         let formatedContents = content
             .split(separator: "\n")
@@ -18,16 +23,9 @@ struct PropertiesFileDecoder {
 
         let regex: NSRegularExpression
         do {
-            // use regular expressions used in dotenv
-            // https://github.com/motdotla/dotenv/blob/463952012640a919a82be0de11f473c1224b498a/lib/main.js#L8
-            regex = try NSRegularExpression(
-                pattern: #"(?:^|^)\s*(?:export\s+)?([\w.-]+)(?:\s*=\s*?|:\s+?)(\s*'(?:\\'|[^'])*'|\s*"(?:\\"|[^"])*"|\s*`(?:\\`|[^`])*`|[^#\r\n]+)?\s*(?:#.*)?(?:$|$)"#,
-                options: [
-                    .anchorsMatchLines,
-                    .dotMatchesLineSeparators,
-                    .useUnixLineSeparators,
-                ]
-            )
+            regex = try NSRegularExpression(pattern: regexPattern, options: [.anchorsMatchLines,
+                                                                             .dotMatchesLineSeparators,
+                                                                             .useUnixLineSeparators])
         } catch {
             throw PropertiesFileDecodingError.internalError(error)
         }

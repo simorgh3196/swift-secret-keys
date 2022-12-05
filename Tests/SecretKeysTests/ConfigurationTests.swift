@@ -2,9 +2,9 @@
 //
 // Copyright (c) 2022 Tomoya Hayakawa (github.com/simorgh3196).
 
+@testable import secret_keys
 import XCTest
 import Yams
-@testable import secret_keys
 
 final class ConfigurationDecoderTests: XCTestCase {
     var decoder: YAMLDecoder!
