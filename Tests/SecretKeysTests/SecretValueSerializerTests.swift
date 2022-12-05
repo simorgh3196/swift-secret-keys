@@ -2,8 +2,8 @@
 //
 // Copyright (c) 2022 Tomoya Hayakawa (github.com/simorgh3196).
 
-import XCTest
 @testable import secret_keys
+import XCTest
 
 final class SecretValueSerializerTests: XCTestCase {
     func testEncodeValue() {
