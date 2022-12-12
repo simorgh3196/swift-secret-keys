@@ -15,7 +15,7 @@ enum CocoaodsProjectGenerator {
         try writeCode(GitignoreCodeGenerator.generateCode(),
                       path: projectPath,
                       fileName: ".gitignore")
-        try writeCode(SecretValueDecoderPodspecCodeGenerator.generateCode(),
+        try writeCode(SecretValueDecoderCodeGenerator.generateCode(),
                       path: projectPath,
                       fileName: "SecretValueDecoder.podspec")
         for target in config.targets {
