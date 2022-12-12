@@ -24,7 +24,7 @@ jobs:
     env:
       DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode }}.app/Contents/Developer
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Run Tests
         run: swift test
 
@@ -32,7 +32,7 @@ jobs:
     name: Discover Typos
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Discover typos
         run: |
           export PATH="$PATH:/Library/Frameworks/Python.framework/Versions/3.11/bin"
