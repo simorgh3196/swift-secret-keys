@@ -9,7 +9,7 @@ enum SourcesOnlyGenerator {
         try writeCode(GitignoreCodeGenerator.generateCode(),
                       path: config.outputDirectory,
                       fileName: ".gitignore")
-        try writeCode(SecretValueDecoderPodspecCodeGenerator.generateCode(),
+        try writeCode(SecretValueDecoderCodeGenerator.generateCode(),
                       path: "\(config.outputDirectory)/SecretValueDecoder",
                       fileName: "SecretValueDecoder.swift")
 

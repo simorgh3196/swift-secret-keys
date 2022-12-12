@@ -18,7 +18,7 @@ enum SwiftpmProjectGenerator {
         try writeCode(PackageCodeGenerator.generateCode(projectName: projectName, config: config),
                       path: projectPath,
                       fileName: "Package.swift")
-        try writeCode(SecretValueDecoderPodspecCodeGenerator.generateCode(),
+        try writeCode(SecretValueDecoderCodeGenerator.generateCode(),
                       path: "\(projectSourcePath)/SecretValueDecoder",
                       fileName: "SecretValueDecoder.swift")
 
