@@ -6,7 +6,7 @@ import Foundation
 
 enum SwiftpmProjectGenerator {
     static func generate(with config: Configuration) throws {
-        let projectName = "_SecretKeys"
+        let projectName = "SecretKeys"
         let projectPath = "\(config.outputDirectory)/\(projectName)"
         let projectSourcePath = "\(projectPath)/Sources"
 

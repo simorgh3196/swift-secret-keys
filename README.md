@@ -1,4 +1,4 @@
-# SecretKeys
+# swift-secret-keys
 
 A generator that allows access to environment variables and values defined in the properties file.
 

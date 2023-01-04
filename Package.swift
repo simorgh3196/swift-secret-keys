@@ -3,12 +3,9 @@
 import PackageDescription
 
 let package = Package(
-    name: "SecretKeys",
+    name: "swift-secret-keys",
     platforms: [
-        .iOS(.v11),
-        .macOS(.v11),
-        .tvOS(.v11),
-        .watchOS(.v4),
+        .macOS(.v12),
     ],
     products: [
         .executable(name: "secret-keys", targets: ["secret-keys"]),
