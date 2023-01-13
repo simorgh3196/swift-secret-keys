@@ -27,7 +27,7 @@ import Foundation
      namespace: MySecretKeys # can override namespace (Default: `Keys`)
      keys:
        clientID:
-         name: CLIENT_ID_DEBUG # can override `name` only when `#if DEBUG`
+         name: CLIENT_ID_DEBUG
        clientSecret:
          name: CLIENT_SECRET_DEBUG
        apiPath:
