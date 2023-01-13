@@ -7,7 +7,7 @@ import Foundation
 enum CocoaodsProjectGenerator {
     static func generate(with config: Configuration) throws {
         let projectName = "SecretKeys"
-        let projectPath = "\(config.outputDirectory)/\(projectName)"
+        let projectPath = "\(config.output)/\(projectName)"
         let projectSourcePath = "\(projectPath)/Sources"
 
         try FileIO.cleanDirectory(path: projectPath)
@@ -31,20 +31,18 @@ enum CocoaodsProjectGenerator {
         let valueEncoder = SecretValueEncoder()
 
         for target in config.targets {
-            let source = target.source ?? config.source
-            let keyMaps = config.keys.merging(target.keys ?? [:]) { _, keyInTarget in keyInTarget }
-
-            let secrets = try keyMaps.map { keyMap -> Secret in
-                let rawSecret = try loader.loadSecret(forKey: keyMap.value, from: source)
-                return Secret(key: keyMap.key, value: rawSecret.value)
+            let secrets = try target.keys.map { key -> Secret in
+                let rawSecret = try loader.loadSecret(forKey: key.nameOfEnvironment, from: config.envFile)
+                // TODO: load configured secret
+                return Secret(key: key.nameOfVariable, value: rawSecret.value)
             }
 
             let salt = try SaltGenerator.generate()
-            let code = SecretKeysCodeGenerator.generateCode(namespace: target.namespace ?? config.namespace,
+            let code = SecretKeysCodeGenerator.generateCode(namespace: target.namespace,
                                                             secrets: secrets,
                                                             salt: salt,
                                                             encoder: valueEncoder,
-                                                            importDecoder: true)
+                                                            includeBase: true)
             try writeCode(code,
                           path: "\(projectSourcePath)/\(target.name)",
                           fileName: "SecretKeys.swift")

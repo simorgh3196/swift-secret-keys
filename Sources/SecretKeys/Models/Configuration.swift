@@ -4,83 +4,115 @@
 
 import Foundation
 
-// Configuration file interface:
-//
-// ```yaml:.secretkeys.yml
-// # Select the export type from `swiftpm`, `cocoapods` or `sourcesOnly`. (Default: `swiftpm`)
-// exportType: swiftpm
-//
-// # Determine the name of the struct. (Default: `Keys`)
-// namespace: Keys
-//
-// # Also generate unit tests for accessing keys. (Default: `false`)
-// withUnitTest: false
-//
-// # The path of output directory. (Default: `./Dependencies`)
-// outputDirectory: ./Dependencies
-//
-// # In addition to environment variables, a properties file can be read.
-// source: .env
-//
-// # Mapping variable names to environment variable names.
-// keys:
-//   clientID: CLIENT_ID
-//   clientSecret: CLIENT_SECRET
-//
-// # Set the target according to the environment and other requirements that
-// # you want to use different build modes, etc.
-// targets:
-//   - name: SharedSecretKeys
-//     namespace: SharedKeys # can override namespace
-//   - name: SecretKeysDebug
-//   - name: SecretKeysProduction
-//     source: .env.production # can replace a properties file
-//     keys: # can override key mappings
-//       clientSecret: PRODUCTION_CLIENT_SECRET
-// ```
+/*
+ Configuration file interface:
+
+ ```yaml
+ # Select the export type from `swiftpm`, `cocoapods` or `sourcesOnly`. (Default: `swiftpm`)
+ exportType: swiftpm
+
+ # Also generate unit tests for accessing keys. (Default: `false`)
+ withUnitTest: false
+
+ # The path of output directory. (Default: `Dependencies`)
+ output: Dependencies
+
+ # In addition to environment variables, a properties file can be read.
+ envFile: .env
+
+ # Set the target according to the environment and other requirements that
+ # you want to use different build modes, etc.
+ targets:
+   SecretKeysDebug:
+     namespace: MySecretKeys # can override namespace (Default: `Keys`)
+     keys:
+       clientID:
+         name: CLIENT_ID_DEBUG # can override `name` only when `#if DEBUG`
+       clientSecret:
+         name: CLIENT_SECRET_DEBUG
+       apiPath:
+         name: BASE_API_PATH
+       home:
+         name: HOME # can load environment variables
+
+   SecretKeysProduction:
+     namespace: MySecretKeys # can override namespace (Default: `Keys`)
+     keys:
+       clientID:
+         name: CLIENT_ID_PRODUCTION
+         config:
+           DEBUG: CLIENT_ID_ADHOC # can override `name` only when `#if DEBUG`
+       clientSecret:
+         name: CLIENT_SECRET_PRODUCTION
+         config:
+           DEBUG: CLIENT_SECRET_ADHOC
+       apiPath:
+         name: BASE_API_PATH
+ ```
+ */
 
 struct Configuration: Equatable {
-    enum ExportType: String, Equatable, Codable {
+    enum ExportType: String, Equatable, Decodable {
         case swiftpm
         case cocoapods
         case sourcesOnly
     }
 
-    struct Target: Equatable, Codable {
+    struct Target: Equatable {
         var name: String
-        var namespace: String?
-        var source: String?
-        var keys: [String: String]?
+        var namespace: String
+        var keys: [Key]
     }
 
-    enum CodingKeys: CodingKey {
-        case exportType
-        case namespace
-        case withUnitTest
-        case outputDirectory
-        case source
-        case keys
-        case targets
+    struct Key: Identifiable, Equatable {
+        var id: String { nameOfVariable }
+        var nameOfVariable: String
+        var nameOfEnvironment: String
+        var config: [String: String]
     }
 
     var exportType: ExportType
-    var namespace: String
     var withUnitTest: Bool
-    var outputDirectory: String
-    var source: String?
-    var keys: [String: String]
+    var output: String
+    var envFile: String?
     var targets: [Target]
 }
 
-extension Configuration: Codable {
+extension Configuration: Decodable {
+    private enum CodingKeys: CodingKey {
+        case exportType
+        case withUnitTest
+        case output
+        case envFile
+        case targets
+    }
+
+    private struct _Target: Equatable, Decodable {
+        var namespace: String?
+        var keys: [String: _Key]
+    }
+
+    private struct _Key: Equatable, Decodable {
+        var name: String
+        var config: [String: String]?
+    }
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.exportType = try container.decodeIfPresent(ExportType.self, forKey: .exportType) ?? .swiftpm
-        self.namespace = try container.decodeIfPresent(String.self, forKey: .namespace) ?? "Keys"
         self.withUnitTest = try container.decodeIfPresent(Bool.self, forKey: .withUnitTest) ?? false
-        self.outputDirectory = try container.decodeIfPresent(String.self, forKey: .outputDirectory) ?? "./Dependencies"
-        self.source = try container.decodeIfPresent(String.self, forKey: .source)
-        self.keys = try container.decodeIfPresent([String: String].self, forKey: .keys) ?? [:]
-        self.targets = try container.decode([Configuration.Target].self, forKey: .targets)
+        self.output = try container.decodeIfPresent(String.self, forKey: .output) ?? "Dependencies"
+        self.envFile = try container.decodeIfPresent(String.self, forKey: .envFile)
+        self.targets = try container.decode([String: _Target].self, forKey: .targets).map { target in
+            Target(
+                name: target.key,
+                namespace: target.value.namespace ?? "Key",
+                keys: target.value.keys.map { variableName, key in
+                    Key(nameOfVariable: variableName,
+                        nameOfEnvironment: key.name,
+                        config: key.config ?? [:])
+                }
+            )
+        }
     }
 }

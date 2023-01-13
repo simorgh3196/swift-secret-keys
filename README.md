@@ -26,36 +26,45 @@ A generator that allows access to environment variables and values defined in th
 `.secretkeys.yml`
 
 ```yaml
-# Select the export type from `swiftpm` or `cocoapods`. (Default: `swiftpm`)
+# Select the export type from `swiftpm`, `cocoapods` or `sourcesOnly`. (Default: `swiftpm`)
 exportType: swiftpm
-
-# Determine the name of the struct. (Default: `Keys`)
-namespace: Keys
 
 # Also generate unit tests for accessing keys. (Default: `false`)
 withUnitTest: false
 
-# The path of output directory. (Default: `./Dependencies`)
-outputDirectory: ./Dependencies
+# The path of output directory. (Default: `Dependencies`)
+output: Dependencies
 
 # In addition to environment variables, a properties file can be read.
-source: .env
-
-# Mapping variable names to environment variable names.
-keys:
-  clientID: CLIENT_ID
-  clientSecret: CLIENT_SECRET
+envFile: .env
 
 # Set the target according to the environment and other requirements that
 # you want to use different build modes, etc.
 targets:
-  - name: SharedSecretKeys
-    namespace: SharedKeys # can override namespace
-  - name: SecretKeysDebug
-  - name: SecretKeysProduction
-    source: .env.production # can replace a properties file
-    keys: # can override key mappings
-      clientSecret: PRODUCTION_CLIENT_SECRET
+  SecretKeysDebug:
+    namespace: MySecretKeys # can override namespace (Default: `Keys`)
+    keys:
+      clientID:
+        name: CLIENT_ID_DEBUG # can override `name` only when `#if DEBUG`
+      clientSecret:
+        name: CLIENT_SECRET_DEBUG
+      apiPath:
+        name: BASE_API_PATH
+      home:
+        name: HOME # can load environment variables
+
+  SecretKeysProduction:
+    keys:
+      clientID:
+        name: CLIENT_ID_PRODUCTION
+        config:
+          DEBUG: CLIENT_ID_ADHOC # can override `name` only when `#if DEBUG`
+      clientSecret:
+        name: CLIENT_SECRET_PRODUCTION
+        config:
+          DEBUG: CLIENT_SECRET_ADHOC
+      apiPath:
+        name: BASE_API_PATH
 ```
 
 ## Installation
