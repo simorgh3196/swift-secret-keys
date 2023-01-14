@@ -11,7 +11,7 @@ release-build: .build/release/secret-keys
 artifact: secret-keys.artifactbundle
 
 .PHONY: test
-test:
+test: example
 	swift test
 	swift test --package-path Example/CommandPluginExample -c debug
 	swift test --package-path Example/CommandPluginExample -c release
@@ -23,6 +23,12 @@ lint:
 .PHONY: format
 format:
 	mint run swiftlint --fix Sources Tests
+
+.PHONY: example
+example:
+	swift package plugin --allow-writing-to-package-directory secret-keys generate \
+		-c Example/CommandPluginExample/.secretkeys.yml \
+		-p Example/CommandPluginExample
 
 .build/debug/secret-keys: Package.swift Sources/**/*.swift
 	swift build
