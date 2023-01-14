@@ -42,18 +42,9 @@ enum PackageCodeGenerator {
     }
 
     private static func generateTargetsCode(config: Configuration) -> String {
-        let mainTargets = config.targets
+        config.targets
             .sorted(by: { $0.name < $1.name })
             .map { "        .target(name: \"\($0.name)\", dependencies: [\"SecretValueDecoder\"])," }
             .joined(separator: "\n")
-
-        let testTargets = config.withUnitTest
-          ? "\n" + config.targets
-            .sorted(by: { $0.name < $1.name })
-            .map { "        .testTarget(name: \"\($0.name)Test\", dependencies: [\"\($0.name)\"])," }
-            .joined(separator: "\n")
-          : ""
-
-        return mainTargets + testTargets
     }
 }
