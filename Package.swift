@@ -21,10 +21,10 @@ let package = Package(
             capability: .command(
                 intent: .custom(
                     verb: "secret-keys",
-                    description: "Generates a project to access the values of environment variables and properties files."
+                    description: "Generates a project to access the values of environment variables and properties files"
                 ),
                 permissions: [
-                    .writeToPackageDirectory(reason: "Generates a project to access the values of environment variables and properties files."),
+                    .writeToPackageDirectory(reason: "This command generates source code"),
                 ]
             ),
             dependencies: ["secret-keys"]),
