@@ -76,7 +76,7 @@ Installation:
 Add a dependency to `Package.swift`.
 
 ```swift
-.package(url: "https://github.com/simorgh3196/swift-secret-keys", from: "0.0.1"),
+.package(url: "https://github.com/simorgh3196/swift-secret-keys", from: "0.0.2"),
 ```
 
 Execution:
@@ -92,7 +92,7 @@ Installation:
 Add the following to your Mintfile.
 
 ```
-simorgh3196/SecretKeys@0.0.1
+simorgh3196/SecretKeys@0.0.2
 ```
 
 Execution:
