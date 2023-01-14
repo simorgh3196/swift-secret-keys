@@ -13,6 +13,8 @@ artifact: secret-keys.artifactbundle
 .PHONY: test
 test:
 	swift test
+	swift test --package-path Example/CommandPluginExample -c debug
+	swift test --package-path Example/CommandPluginExample -c release
 
 .PHONY: lint
 lint:
