@@ -33,8 +33,8 @@ enum CocoaodsProjectGenerator {
         for target in config.targets {
             let secrets = try target.keys.map { key -> Secret in
                 let envKey = try loader.loadEnvironmentKey(forName: key.nameOfEnvironment)
-                let configuredSecrets = Dictionary(uniqueKeysWithValues: try key.config
-                    .map { (config, nameOfEnvironment) in
+                let configuredSecrets: [String: SecretValue] = .init(uniqueKeysWithValues: try key.config
+                    .map { (config, nameOfEnvironment) -> (String, SecretValue) in
                         (config, try loader.loadEnvironmentKey(forName: nameOfEnvironment).value)
                     }
                 )

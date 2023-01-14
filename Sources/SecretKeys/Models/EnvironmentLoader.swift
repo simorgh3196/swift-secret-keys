@@ -29,7 +29,7 @@ final class EnvironmentLoader {
     }
 
     private func loadKeysFromEnvFile() throws -> [EnvironmentKey.ID: EnvironmentKey]? {
-        guard let envFile else {
+        guard let envFile = envFile else {
             return nil
         }
 
@@ -43,7 +43,7 @@ final class EnvironmentLoader {
 
         Logger.log(.debug, "Parsing properties")
         let envs = try PropertiesFileDecoder().decode(content: sourceContent)
-        let environmentKeys = Dictionary(uniqueKeysWithValues: envs.map { ($0.id, $0) })
+        let environmentKeys: [EnvironmentKey.ID: EnvironmentKey] = .init(uniqueKeysWithValues: envs.map { ($0.id, $0) })
 
         Logger.log(.debug, "Success to load properties")
 

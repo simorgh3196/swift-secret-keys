@@ -39,7 +39,7 @@ enum SecretKeysCodeGenerator {
     }
 
     private static func generateSecretCode(_ secret: Secret, salt: [UInt8], encoder: SecretValueEncoder) -> String {
-        let encodedBytes = {
+        let encodedBytes: String = {
             guard !secret.configuredSecrets.isEmpty else {
                 return """
                         let encodedBytes: [UInt8] = [
