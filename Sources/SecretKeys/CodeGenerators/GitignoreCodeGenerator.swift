@@ -7,8 +7,16 @@ import Foundation
 enum GitignoreCodeGenerator {
     static func generateCode() -> String {
         """
-        SecretKeys.swift
-        *.generated.swift
+        .DS_Store
+        /.build
+        /Packages
+        /*.xcodeproj
+        xcuserdata/
+        DerivedData/
+        .swiftpm/config/registries.json
+        .swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
+        .netrc
+        SecretKeys+Keys.swift
         """
     }
 }

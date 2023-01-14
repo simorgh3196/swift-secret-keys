@@ -15,7 +15,7 @@ struct PropertiesFileDecoder {
     // swiftlint:disable:next line_length
     private let regexPattern = #"(?:^|^)\s*(?:export\s+)?([\w.-]+)(?:\s*=\s*?|:\s+?)(\s*'(?:\\'|[^'])*'|\s*"(?:\\"|[^"])*"|\s*`(?:\\`|[^`])*`|[^#\r\n]+)?\s*(?:#.*)?(?:$|$)"#
 
-    func decode(content: String) throws -> [Secret] {
+    func decode(content: String) throws -> [EnvironmentKey] {
         let formatedContents = content
             .split(separator: "\n")
             .filter { !$0.trimmingCharacters(in: .whitespaces).hasPrefix("#") } // remove comment lines
@@ -50,7 +50,7 @@ struct PropertiesFileDecoder {
                 .trimmingCharacters(in: .whitespaces)
                 .trimmingCharacters(in: .init(charactersIn: "\"'`"))
 
-            return Secret(key: key, stringValue: value)
+            return EnvironmentKey(name: key, stringValue: value)
         }
     }
 }
