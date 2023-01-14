@@ -16,62 +16,99 @@ final class ConfigurationDecoderTests: XCTestCase {
     func testDecodeConfigurationDefaultValues() throws {
         let configYamlData = """
         targets:
-          - name: SecretKeys
+          SecretKeys:
+            keys:
+              apiKey:
+                name: API_KEY
         """
 
         let config = try decoder.decode(Configuration.self, from: configYamlData)
 
-        XCTAssertEqual(config.namespace, "Keys")
+        XCTAssertEqual(config.exportType, .swiftpm)
         XCTAssertEqual(config.withUnitTest, false)
-        XCTAssertEqual(config.outputDirectory, "./Dependencies")
-        XCTAssertEqual(config.source, nil)
-        XCTAssertEqual(config.keys, [:])
-        XCTAssertEqual(config.targets, [Configuration.Target(name: "SecretKeys")])
+        XCTAssertEqual(config.output, "Dependencies")
+        XCTAssertEqual(config.targets, [
+            Configuration.Target(name: "SecretKeys", namespace: "Key", keys: [
+                Configuration.Key(nameOfVariable: "apiKey",
+                                  nameOfEnvironment: "API_KEY",
+                                  config: [:])
+            ])
+        ])
     }
 
     func testDecodeConfigurationCustomValues() throws {
         let configYamlData = """
-        namespace: TestKeys
+        exportType: cocoapods
         withUnitTest: true
-        outputDirectory: _Keys
-        source: .env.default
-        keys:
-          clientID: CLIENT_ID
-          clientSecret: CLIENT_SECRET
+        output: OUTPUT
+        envFile: .env.dev
         targets:
-          - name: SharedSecretKeys
-            namespace: SharedKeys
-          - name: SecretKeysDebug
-          - name: SecretKeysProduction
-            source: .env.production
+          SecretKeysDebug:
+            namespace: MySecretKeys
             keys:
-              clientSecret: PRODUCTION_CLIENT_SECRET
+              clientID:
+                name: CLIENT_ID_DEBUG
+              clientSecret:
+                name: CLIENT_SECRET_DEBUG
+              apiPath:
+                name: BASE_API_PATH
+              home:
+                name: HOME
+
+          SecretKeysProduction:
+            namespace: MySecretKeys
+            keys:
+              clientID:
+                name: CLIENT_ID_PRODUCTION
+                config:
+                  DEBUG: CLIENT_ID_ADHOC
+              clientSecret:
+                name: CLIENT_SECRET_PRODUCTION
+                config:
+                  DEBUG: CLIENT_SECRET_ADHOC
+              apiPath:
+                name: BASE_API_PATH
         """.data(using: .utf8)!
 
         let config = try decoder.decode(Configuration.self, from: configYamlData)
 
-        XCTAssertEqual(config.namespace, "TestKeys")
+        XCTAssertEqual(config.exportType, .cocoapods)
         XCTAssertEqual(config.withUnitTest, true)
-        XCTAssertEqual(config.outputDirectory, "_Keys")
-        XCTAssertEqual(config.source, ".env.default")
-        XCTAssertEqual(config.keys, [
-            "clientID": "CLIENT_ID",
-            "clientSecret": "CLIENT_SECRET",
-        ])
-        XCTAssertEqual(config.targets.count, 3)
-        XCTAssertEqual(config.targets[0], Configuration.Target(
-            name: "SharedSecretKeys",
-            namespace: "SharedKeys"
-        ))
-        XCTAssertEqual(config.targets[1], Configuration.Target(
-            name: "SecretKeysDebug"
-        ))
-        XCTAssertEqual(config.targets[2], Configuration.Target(
-            name: "SecretKeysProduction",
-            source: ".env.production",
-            keys: [
-                "clientSecret": "PRODUCTION_CLIENT_SECRET"
-            ])
-        )
+        XCTAssertEqual(config.output, "OUTPUT")
+        XCTAssertEqual(config.envFile, ".env.dev")
+        XCTAssertEqual(config.targets.count, 2)
+
+        let targets = config.targets.sorted(by: { $0.name < $1.name })
+
+        XCTAssertEqual(targets[0].name, "SecretKeysDebug")
+        XCTAssertEqual(targets[0].namespace, "MySecretKeys")
+        XCTAssertEqual(targets[0].keys.sorted(by: { $0.id < $1.id }), [
+            Configuration.Key(nameOfVariable: "clientID",
+                              nameOfEnvironment: "CLIENT_ID_DEBUG",
+                              config: [:]),
+            Configuration.Key(nameOfVariable: "clientSecret",
+                              nameOfEnvironment: "CLIENT_SECRET_DEBUG",
+                              config: [:]),
+            Configuration.Key(nameOfVariable: "apiPath",
+                              nameOfEnvironment: "BASE_API_PATH",
+                              config: [:]),
+            Configuration.Key(nameOfVariable: "home",
+                              nameOfEnvironment: "HOME",
+                              config: [:]),
+        ].sorted(by: { $0.id < $1.id }))
+
+        XCTAssertEqual(targets[1].name, "SecretKeysProduction")
+        XCTAssertEqual(targets[1].namespace, "MySecretKeys")
+        XCTAssertEqual(targets[1].keys.sorted(by: { $0.id < $1.id }), [
+            Configuration.Key(nameOfVariable: "clientID",
+                              nameOfEnvironment: "CLIENT_ID_PRODUCTION",
+                              config: ["DEBUG": "CLIENT_ID_ADHOC"]),
+            Configuration.Key(nameOfVariable: "clientSecret",
+                              nameOfEnvironment: "CLIENT_SECRET_PRODUCTION",
+                              config: ["DEBUG": "CLIENT_SECRET_ADHOC"]),
+            Configuration.Key(nameOfVariable: "apiPath",
+                              nameOfEnvironment: "BASE_API_PATH",
+                              config: [:]),
+        ].sorted(by: { $0.id < $1.id }))
     }
 }
