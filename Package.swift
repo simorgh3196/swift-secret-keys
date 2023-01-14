@@ -12,7 +12,7 @@ let package = Package(
         .plugin(name: "SecretKeysCommandPlugin", targets: ["SecretKeysCommandPlugin"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/apple/swift-argument-parser", from: "1.2.0"),
+        .package(url: "https://github.com/apple/swift-argument-parser", from: "1.2.1"),
         .package(url: "https://github.com/jpsim/Yams", from: "5.0.1"),
     ],
     targets: [
@@ -21,10 +21,10 @@ let package = Package(
             capability: .command(
                 intent: .custom(
                     verb: "secret-keys",
-                    description: "Generates a project to access the values of environment variables and properties files."
+                    description: "Generates a project to access the values of environment variables and properties files"
                 ),
                 permissions: [
-                    .writeToPackageDirectory(reason: "Generates a project to access the values of environment variables and properties files."),
+                    .writeToPackageDirectory(reason: "This command generates source code"),
                 ]
             ),
             dependencies: ["secret-keys"]),
