@@ -11,9 +11,6 @@ import Foundation
  # Select the export type from `swiftpm`, `cocoapods` or `sourcesOnly`. (Default: `swiftpm`)
  exportType: swiftpm
 
- # Also generate unit tests for accessing keys. (Default: `false`)
- withUnitTest: false
-
  # The path of output directory. (Default: `Dependencies`)
  output: Dependencies
 
@@ -72,7 +69,6 @@ struct Configuration: Equatable {
     }
 
     var exportType: ExportType
-    var withUnitTest: Bool
     var output: String
     var envFile: String?
     var targets: [Target]
@@ -81,7 +77,6 @@ struct Configuration: Equatable {
 extension Configuration: Decodable {
     private enum CodingKeys: CodingKey {
         case exportType
-        case withUnitTest
         case output
         case envFile
         case targets
@@ -100,7 +95,6 @@ extension Configuration: Decodable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.exportType = try container.decodeIfPresent(ExportType.self, forKey: .exportType) ?? .swiftpm
-        self.withUnitTest = try container.decodeIfPresent(Bool.self, forKey: .withUnitTest) ?? false
         self.output = try container.decodeIfPresent(String.self, forKey: .output) ?? "Dependencies"
         self.envFile = try container.decodeIfPresent(String.self, forKey: .envFile)
         self.targets = try container.decode([String: _Target].self, forKey: .targets).map { target in

@@ -25,7 +25,6 @@ final class ConfigurationDecoderTests: XCTestCase {
         let config = try decoder.decode(Configuration.self, from: configYamlData)
 
         XCTAssertEqual(config.exportType, .swiftpm)
-        XCTAssertEqual(config.withUnitTest, false)
         XCTAssertEqual(config.output, "Dependencies")
         XCTAssertEqual(config.targets, [
             Configuration.Target(name: "SecretKeys", namespace: "Key", keys: [
@@ -39,7 +38,6 @@ final class ConfigurationDecoderTests: XCTestCase {
     func testDecodeConfigurationCustomValues() throws {
         let configYamlData = """
         exportType: cocoapods
-        withUnitTest: true
         output: OUTPUT
         envFile: .env.dev
         targets:
@@ -73,7 +71,6 @@ final class ConfigurationDecoderTests: XCTestCase {
         let config = try decoder.decode(Configuration.self, from: configYamlData)
 
         XCTAssertEqual(config.exportType, .cocoapods)
-        XCTAssertEqual(config.withUnitTest, true)
         XCTAssertEqual(config.output, "OUTPUT")
         XCTAssertEqual(config.envFile, ".env.dev")
         XCTAssertEqual(config.targets.count, 2)
