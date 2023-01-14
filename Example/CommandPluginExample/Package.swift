@@ -9,8 +9,8 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "CommandPluginExample",
-            targets: ["CommandPluginExample"]),
+            name: "InstallationWithSPM",
+            targets: ["InstallationWithSPM"]),
     ],
     dependencies: [
         .package(name: "swift-secret-keys", path: "../../"),
@@ -18,13 +18,13 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "CommandPluginExample",
+            name: "InstallationWithSPM",
             dependencies: [
                 .product(name: "SecretKeysDebug", package: "SecretKeys"),
                 .product(name: "SecretKeysProduction", package: "SecretKeys"),
             ]),
         .testTarget(
-            name: "CommandPluginExampleTests",
-            dependencies: ["CommandPluginExample"]),
+            name: "InstallationWithSPMTests",
+            dependencies: ["InstallationWithSPM"]),
     ]
 )
