@@ -42,8 +42,8 @@ final class EnvironmentLoader {
         let sourceContent = try FileIO.readFileContents(for: envFile)
 
         Logger.log(.debug, "Parsing properties")
-        let _environmentKeys = try PropertiesFileDecoder().decode(content: sourceContent)
-        let environmentKeys = Dictionary(uniqueKeysWithValues: _environmentKeys.map { ($0.id, $0) })
+        let envs = try PropertiesFileDecoder().decode(content: sourceContent)
+        let environmentKeys = Dictionary(uniqueKeysWithValues: envs.map { ($0.id, $0) })
 
         Logger.log(.debug, "Success to load properties")
 
