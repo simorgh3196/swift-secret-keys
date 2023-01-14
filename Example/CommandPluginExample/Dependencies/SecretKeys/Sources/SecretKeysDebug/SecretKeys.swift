@@ -4,6 +4,6 @@
 import Foundation
 import SecretValueDecoder
 
-public enum MySecretKeys {
+public enum DebugKeys {
     static let decoder = SecretValueDecoder()
 }

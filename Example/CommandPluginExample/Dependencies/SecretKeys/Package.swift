@@ -14,12 +14,12 @@ let package = Package(
         .watchOS(.v4),
     ],
     products: [
-        .library(name: "SecretKeysProduction", targets: ["SecretKeysProduction"]),
         .library(name: "SecretKeysDebug", targets: ["SecretKeysDebug"]),
+        .library(name: "SecretKeysProduction", targets: ["SecretKeysProduction"]),
     ],
     targets: [
-        .target(name: "SecretKeysProduction", dependencies: ["SecretValueDecoder"]),
         .target(name: "SecretKeysDebug", dependencies: ["SecretValueDecoder"]),
+        .target(name: "SecretKeysProduction", dependencies: ["SecretValueDecoder"]),
 
         .target(name: "SecretValueDecoder", path: "Sources/SecretValueDecoder"),
     ]
