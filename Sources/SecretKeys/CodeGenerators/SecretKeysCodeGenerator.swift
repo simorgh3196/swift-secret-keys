@@ -20,7 +20,9 @@ enum SecretKeysCodeGenerator {
             private static let salt: [UInt8] = [
                 \(convertBytesTo16RadixString(from: salt))
             ]
-            \(secrets.map { generateSecretCode($0, salt: salt, encoder: encoder) }.joined(separator: "\n"))
+        \(secrets.sorted(by: { $0.name < $1.name})
+            .map { generateSecretCode($0, salt: salt, encoder: encoder) }
+            .joined(separator: "\n"))
         }
 
         """
@@ -37,13 +39,43 @@ enum SecretKeysCodeGenerator {
     }
 
     private static func generateSecretCode(_ secret: Secret, salt: [UInt8], encoder: SecretValueEncoder) -> String {
-        """
+        let encodedBytes = {
+            guard !secret.configuredSecrets.isEmpty else {
+                return """
+                        let encodedBytes: [UInt8] = [
+                            \(convertBytesTo16RadixString(from: encoder.encode(value: secret.value, with: salt)))
+                        ]
+                """
+            }
+
+            var codes: [String] = []
+
+            for (config, secretValue) in secret.configuredSecrets.sorted(by: { $0.key < $1.key }) {
+                codes.append("""
+            \(codes.isEmpty ? "#if" : "#elseif") \(config)
+                    let encodedBytes: [UInt8] = [
+                        \(convertBytesTo16RadixString(from: encoder.encode(value: secretValue, with: salt)))
+                    ]
+            """)
+            }
+
+            codes.append("""
+            #else
+                    let encodedBytes: [UInt8] = [
+                        \(convertBytesTo16RadixString(from: encoder.encode(value: secret.value, with: salt)))
+                    ]
+            #endif
+            """)
+
+            return codes.joined(separator: "\n")
+        }()
+
+        return """
 
             @inline(__always)
-            public static let \(secret.key): \(secret.value.type) = {
-                let encodedBytes: [UInt8] = [
-                    \(convertBytesTo16RadixString(from: encoder.encode(value: secret.value, with: salt)))
-                ]
+            public static let \(secret.name): \(secret.value.type) = {
+        \(encodedBytes)
+
                 return try! Self.decoder.decode(bytes: encodedBytes, with: Self.salt)
             }()
         """

@@ -27,14 +27,20 @@ enum CocoaodsProjectGenerator {
                       path: "\(projectSourcePath)/SecretValueDecoder",
                       fileName: "SecretValueDecoder.swift")
 
-        let loader = SecretLoader()
+        let loader = EnvironmentLoader(envFile: config.envFile)
         let valueEncoder = SecretValueEncoder()
 
         for target in config.targets {
             let secrets = try target.keys.map { key -> Secret in
-                let rawSecret = try loader.loadSecret(forKey: key.nameOfEnvironment, from: config.envFile)
-                // TODO: load configured secret
-                return Secret(key: key.nameOfVariable, value: rawSecret.value)
+                let envKey = try loader.loadEnvironmentKey(forName: key.nameOfEnvironment)
+                let configuredSecrets = Dictionary(uniqueKeysWithValues: try key.config
+                    .map { (config, nameOfEnvironment) in
+                        (config, try loader.loadEnvironmentKey(forName: nameOfEnvironment).value)
+                    }
+                )
+                return Secret(name: key.nameOfVariable,
+                              value: envKey.value,
+                              configuredSecrets: configuredSecrets)
             }
 
             let salt = try SaltGenerator.generate()
