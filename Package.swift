@@ -12,7 +12,7 @@ let package = Package(
         .plugin(name: "SecretKeysCommandPlugin", targets: ["SecretKeysCommandPlugin"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/apple/swift-argument-parser", from: "1.2.0"),
+        .package(url: "https://github.com/apple/swift-argument-parser", from: "1.2.1"),
         .package(url: "https://github.com/jpsim/Yams", from: "5.0.1"),
     ],
     targets: [
