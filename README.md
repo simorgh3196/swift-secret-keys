@@ -67,12 +67,38 @@ targets:
         name: BASE_API_PATH
 ```
 
-## Installation
+## Usage
 
-### [Mint](https://github.com/yonaskolb/Mint)
+### Using Swift package manager
 
-```sh
-mint install simorgh3196/SecretKeys
+Installation:
+
+Add a dependency to `Package.swift`.
+
+```swift
+.package(url: "https://github.com/simorgh3196/swift-secret-keys", from: "0.0.1"),
+```
+
+Execution:
+
+```shell
+swift package plugin --allow-writing-to-package-directory secret-keys generate
+```
+
+### Using [Mint](https://github.com/yonaskolb/Mint)
+
+Installation:
+
+Add the following to your Mintfile.
+
+```
+simorgh3196/SecretKeys@0.0.1
+```
+
+Execution:
+
+```shell
+mint run secret-keys generate
 ```
 
 ## Getting Started
