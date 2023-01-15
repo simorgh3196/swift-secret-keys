@@ -30,7 +30,10 @@ format:
 .PHONY: example
 example:
 	swift package plugin --allow-writing-to-package-directory secret-keys generate \
-		-c Example/CommandPluginExample/.secretkeys.yml \
+		-c Example/CommandPluginExample/.secretkeys.swiftpm.yml \
+		-p Example/CommandPluginExample
+	swift package plugin --allow-writing-to-package-directory secret-keys generate \
+		-c Example/CommandPluginExample/.secretkeys.sources.yml \
 		-p Example/CommandPluginExample
 
 .build/debug/secret-keys: Package.swift Sources/**/*.swift
