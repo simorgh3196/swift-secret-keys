@@ -40,11 +40,11 @@ struct FileIO {
 
         Logger.log(.debug, "Writing file to \(path)")
 
-        if !fileExists(atPath: directoryPath, isDirectory: true) {
+        if !fileExists(atPath: path, isDirectory: true) {
             do {
-                try shared.fileManager.createDirectory(atPath: directoryPath, withIntermediateDirectories: true)
+                try shared.fileManager.createDirectory(atPath: path, withIntermediateDirectories: true)
             } catch {
-                throw FileIOError.cannotCreateDirectory(directoryPath: directoryPath, error: error)
+                throw FileIOError.cannotCreateDirectory(directoryPath: path, error: error)
             }
         }
 
