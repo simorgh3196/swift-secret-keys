@@ -11,8 +11,11 @@ release-build: .build/release/secret-keys
 artifact: secret-keys.artifactbundle
 
 .PHONY: test
-test: example
+test:
 	swift test
+
+.PHONY: test-for-command-plugin
+test-for-command-plugin: example
 	swift test --package-path Example/CommandPluginExample -c debug
 	swift test --package-path Example/CommandPluginExample -c release
 
