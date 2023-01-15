@@ -9,7 +9,7 @@ let package = Package(
     ],
     dependencies: [
         .package(name: "swift-secret-keys", path: "../../"),
-        .package(name: "SecretKeys", path: "Dependencies/SecretKeys"),
+        .package(name: "SecretKeys", path: "Dependencies/SwiftPM/SecretKeys"),
     ],
     targets: [
         .target(
