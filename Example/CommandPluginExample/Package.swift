@@ -7,16 +7,17 @@ let package = Package(
     platforms: [
         .macOS(.v12),
     ],
-    products: [
-        .library(
-            name: "InstallationWithSPM",
-            targets: ["InstallationWithSPM"]),
-    ],
     dependencies: [
         .package(name: "swift-secret-keys", path: "../../"),
         .package(name: "SecretKeys", path: "Dependencies/SecretKeys"),
     ],
     targets: [
+        .target(
+            name: "InstallationWithSource"),
+        .testTarget(
+            name: "InstallationWithSourceTests",
+            dependencies: ["InstallationWithSource"]),
+
         .target(
             name: "InstallationWithSPM",
             dependencies: [

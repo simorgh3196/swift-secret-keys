@@ -17,6 +17,7 @@ enum GitignoreCodeGenerator {
         .swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
         .netrc
         SecretKeys+Keys.swift
+        *.generated.swift
         """
     }
 }
