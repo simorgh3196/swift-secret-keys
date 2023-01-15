@@ -11,6 +11,10 @@ struct Generate: ParsableCommand {
             help: "The path to the configuration file")
     var configurationFilePath = ".secretkeys.yml"
 
+    @Option(name: [.short, .customLong("project")],
+            help: "The path to the project root")
+    var projectPath = "."
+
     @Flag(name: .shortAndLong,
           help: "Enables verbose log messages")
     var verbose = false
@@ -21,6 +25,8 @@ struct Generate: ParsableCommand {
         let configData = try FileIO.readFileContents(for: configurationFilePath).data(using: .utf8)!
         let config = try YAMLDecoder().decode(Configuration.self, from: configData)
         Logger.log(.debug, "Config: \(config)")
+
+        FileIO.changeCurrentDirectory(path: projectPath)
 
         switch config.exportType {
         case .swiftpm:

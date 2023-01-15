@@ -13,7 +13,6 @@ A generator that allows access to environment variables and values defined in th
   - [x] Add installation methods
     - [x] SwiftPM plugin
     - [x] Mint
-  - [ ] Generate tests for generated project
   - [x] Setup CI
   - [ ] Add example projects
 - [ ] Documentation
@@ -28,9 +27,6 @@ A generator that allows access to environment variables and values defined in th
 ```yaml
 # Select the export type from `swiftpm`, `cocoapods` or `sourcesOnly`. (Default: `swiftpm`)
 exportType: swiftpm
-
-# Also generate unit tests for accessing keys. (Default: `false`)
-withUnitTest: false
 
 # The path of output directory. (Default: `Dependencies`)
 output: Dependencies
@@ -76,7 +72,7 @@ Installation:
 Add a dependency to `Package.swift`.
 
 ```swift
-.package(url: "https://github.com/simorgh3196/swift-secret-keys", from: "0.0.1"),
+.package(url: "https://github.com/simorgh3196/swift-secret-keys", from: "0.0.2"),
 ```
 
 Execution:
@@ -92,7 +88,7 @@ Installation:
 Add the following to your Mintfile.
 
 ```
-simorgh3196/SecretKeys@0.0.1
+simorgh3196/SecretKeys@0.0.2
 ```
 
 Execution:
