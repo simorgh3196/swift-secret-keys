@@ -9,24 +9,28 @@ on:
       - '*'
 
 jobs:
-  macos-run-tests:
-    name: Unit Tests (Xcode ${{ matrix.xcode }})
-    strategy:
-      fail-fast: false
-      matrix:
-        xcode: ["14.1", "13.4.1"]
-        include:
-          - xcode: "14.1"
-            macos: macOS-12
-          - xcode: "13.4.1"
-            macos: macOS-12
-    runs-on: ${{ matrix.macos }}
+  macos-run-tests-for-xcode14:
+    name: Unit Tests Xcode 14.1
+    runs-on: macos-12
     env:
-      DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode }}.app/Contents/Developer
+      DEVELOPER_DIR: /Applications/Xcode_14.1.app/Contents/Developer
     steps:
       - uses: actions/checkout@v3
-      - name: Run Tests
-        run: swift test
+      - name: Run Tests for SecretKeys
+        run: make test
+      - name: Run Tests for command plugin example
+        run: make test-for-command-plugin
+
+
+  macos-run-tests-for-xcode13:
+    name: Unit Tests 13.4.1
+    runs-on: macos-12
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_13.4.1.app/Contents/Developer
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run Tests for SecretKeys
+        run: make test
 
   discover-typos:
     name: Discover Typos
