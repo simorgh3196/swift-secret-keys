@@ -21,24 +21,25 @@ struct FileIO {
     }
 
     static func readFileContents(for filePath: String) throws -> String {
-        let path = "\(shared.rootPath)/\(filePath)"
-        Logger.log(.debug, "Reading file from \(path)")
+        let filePath = "\(shared.rootPath)/\(filePath)"
+        Logger.log(.debug, "Reading file from \(filePath)")
 
-        guard shared.fileManager.fileExists(atPath: path) else {
-            throw FileIOError.fileNotFound(filePath: path)
+        guard shared.fileManager.fileExists(atPath: filePath) else {
+            throw FileIOError.fileNotFound(filePath: filePath)
         }
 
         do {
-            return try String(contentsOfFile: path, encoding: .utf8)
+            return try String(contentsOfFile: filePath, encoding: .utf8)
         } catch {
-            throw FileIOError.cannotReadFile(filePath: path, error: error)
+            throw FileIOError.cannotReadFile(filePath: filePath, error: error)
         }
     }
 
     static func writeFile(content: String, toDirectoryPath directoryPath: String, fileName: String) throws {
-        let path = "\(shared.rootPath)/\(directoryPath)/\(fileName)"
+        let directoryPath = "\(shared.rootPath)/\(directoryPath)"
+        let filePath = "\(directoryPath)/\(fileName)"
 
-        Logger.log(.debug, "Writing file to \(path)")
+        Logger.log(.debug, "Writing file to \(filePath)")
 
         if !fileExists(atPath: directoryPath, isDirectory: true) {
             do {
@@ -48,19 +49,19 @@ struct FileIO {
             }
         }
 
-        shared.fileManager.createFile(atPath: path, contents: content.data(using: .utf8))
+        shared.fileManager.createFile(atPath: filePath, contents: content.data(using: .utf8))
     }
 
     static func cleanDirectory(path directoryPath: String) throws {
-        let path = "\(shared.rootPath)/\(directoryPath)"
-        Logger.log(.debug, "Cleaning directory \(path)")
+        let directoryPath = "\(shared.rootPath)/\(directoryPath)"
+        Logger.log(.debug, "Cleaning directory \(directoryPath)")
 
-        if fileExists(atPath: path, isDirectory: true) {
+        if fileExists(atPath: directoryPath, isDirectory: true) {
             do {
-                try shared.fileManager.removeItem(atPath: path)
-                try shared.fileManager.createDirectory(atPath: path, withIntermediateDirectories: true)
+                try shared.fileManager.removeItem(atPath: directoryPath)
+                try shared.fileManager.createDirectory(atPath: directoryPath, withIntermediateDirectories: true)
             } catch {
-                throw FileIOError.cannotCreateDirectory(directoryPath: path, error: error)
+                throw FileIOError.cannotCreateDirectory(directoryPath: directoryPath, error: error)
             }
         }
     }
