@@ -1,0 +1,28 @@
+PODS:
+  - SecretKeysDebug (1.0.0):
+    - SecretValueDecoder (~> 1.0.0)
+  - SecretKeysProduction (1.0.0):
+    - SecretValueDecoder (~> 1.0.0)
+  - SecretValueDecoder (1.0.0)
+
+DEPENDENCIES:
+  - SecretKeysDebug (from `../Dependencies/Pods/SecretKeys`)
+  - SecretKeysProduction (from `../Dependencies/Pods/SecretKeys`)
+  - SecretValueDecoder (from `../Dependencies/Pods/SecretKeys`)
+
+EXTERNAL SOURCES:
+  SecretKeysDebug:
+    :path: "../Dependencies/Pods/SecretKeys"
+  SecretKeysProduction:
+    :path: "../Dependencies/Pods/SecretKeys"
+  SecretValueDecoder:
+    :path: "../Dependencies/Pods/SecretKeys"
+
+SPEC CHECKSUMS:
+  SecretKeysDebug: 276592ad1b52494392bfeac0c3c41033f403eff4
+  SecretKeysProduction: b6f1993e26882dceff5099b412cb36f003e6eead
+  SecretValueDecoder: 83eccb370c9e1b2d517925cd75fa404e5119d655
+
+PODFILE CHECKSUM: 60015c6b62d6b1177afbbbcfec9b5e3e4f970991
+
+COCOAPODS: 1.11.3

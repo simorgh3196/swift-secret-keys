@@ -15,7 +15,7 @@ enum CocoaodsProjectGenerator {
         try writeCode(GitignoreCodeGenerator.generateCode(),
                       path: projectPath,
                       fileName: ".gitignore")
-        try writeCode(SecretValueDecoderCodeGenerator.generateCode(),
+        try writeCode(SecretValueDecoderPodspecCodeGenerator.generateCode(),
                       path: projectPath,
                       fileName: "SecretValueDecoder.podspec")
         for target in config.targets {
@@ -23,7 +23,7 @@ enum CocoaodsProjectGenerator {
                           path: projectPath,
                           fileName: "\(target.name).podspec")
         }
-        try writeCode(SecretValueDecoderPodspecCodeGenerator.generateCode(),
+        try writeCode(SecretValueDecoderCodeGenerator.generateCode(),
                       path: "\(projectSourcePath)/SecretValueDecoder",
                       fileName: "SecretValueDecoder.swift")
 
@@ -48,8 +48,13 @@ enum CocoaodsProjectGenerator {
                                                             secrets: secrets,
                                                             salt: salt,
                                                             encoder: valueEncoder,
-                                                            includeBase: true)
+                                                            includeBase: false)
             try writeCode(code,
+                          path: "\(projectSourcePath)/\(target.name)",
+                          fileName: "SecretKeys+Keys.swift")
+
+            let baseCode = SecretKeysBaseCodeGenerator.generateCode(namespace: target.namespace)
+            try writeCode(baseCode,
                           path: "\(projectSourcePath)/\(target.name)",
                           fileName: "SecretKeys.swift")
         }

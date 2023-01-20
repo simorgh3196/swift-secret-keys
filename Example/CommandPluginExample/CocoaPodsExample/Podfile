@@ -1,0 +1,13 @@
+platform :ios, '11.0'
+
+target 'CocoaPodsExample' do
+  use_frameworks!
+
+  pod 'SecretKeysDebug', :path => '../Dependencies/Pods/SecretKeys'
+  pod 'SecretKeysProduction', :path => '../Dependencies/Pods/SecretKeys'
+  pod 'SecretValueDecoder', :path => '../Dependencies/Pods/SecretKeys'
+
+  target 'CocoaPodsExampleTests' do
+    inherit! :search_paths
+  end
+end
