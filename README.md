@@ -1,5 +1,8 @@
 # swift-secret-keys
 
+[![SecretKeys](https://github.com/simorgh3196/swift-secret-keys/actions/workflows/ci.yml/badge.svg)](https://github.com/simorgh3196/swift-secret-keys/actions/workflows/ci.yml)
+[![SwiftLint](https://github.com/simorgh3196/swift-secret-keys/actions/workflows/swiftlint.yml/badge.svg)](https://github.com/simorgh3196/swift-secret-keys/actions/workflows/swiftlint.yml)
+
 A generator that allows access to environment variables and values defined in the properties file.
 
 ## Installation
