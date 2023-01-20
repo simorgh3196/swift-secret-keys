@@ -16,6 +16,10 @@ jobs:
       DEVELOPER_DIR: /Applications/Xcode_14.2.app/Contents/Developer
     steps:
       - uses: actions/checkout@v3
+      - name: setup-cocoapods
+        uses: maxim-lobanov/setup-cocoapods@v1
+        with:
+          podfile-path: Example/CommandPluginExample/CocoaPodsExample/Podfile.lock
       - name: Run Tests for SecretKeys
         run: make test
       - name: Run Tests for command plugin example
