@@ -46,6 +46,7 @@ example:
 	swift package plugin --allow-writing-to-package-directory secret-keys generate \
 		-c Example/CommandPluginExample/.secretkeys.cocoapods.yml \
 		-p Example/CommandPluginExample
+	pod install --project-directory=Example/CommandPluginExample/CocoaPodsExample
 
 .build/debug/secret-keys: Package.swift Sources/**/*.swift
 	swift build
