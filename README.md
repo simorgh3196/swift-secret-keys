@@ -1,24 +1,133 @@
 # swift-secret-keys
 
+[![SecretKeys](https://github.com/simorgh3196/swift-secret-keys/actions/workflows/ci.yml/badge.svg)](https://github.com/simorgh3196/swift-secret-keys/actions/workflows/ci.yml)
+[![SwiftLint](https://github.com/simorgh3196/swift-secret-keys/actions/workflows/swiftlint.yml/badge.svg)](https://github.com/simorgh3196/swift-secret-keys/actions/workflows/swiftlint.yml)
+
 A generator that allows access to environment variables and values defined in the properties file.
 
-⚠️ This project is currently under development.
+## Installation
 
-## Plan
+### Using Swift Package Manager (Command Plugin)
 
-- [ ] Features
-  - [x] Loading environment from process
-  - [x] Change behavior by configuration file
-  - [ ] Add tests for tool
-  - [x] Add installation methods
-    - [x] SwiftPM plugin
-    - [x] Mint
-  - [x] Setup CI
-  - [ ] Add example projects
-- [ ] Documentation
-  - [ ] Add document comments
-  - [ ] Support DocC
-  - [ ] Enhance README
+**Installation:**
+
+Add a dependency to `Package.swift`.
+
+```swift
+.package(url: "https://github.com/simorgh3196/swift-secret-keys", from: "0.0.2"),
+```
+
+**Execution:**
+
+```shell
+swift package plugin --allow-writing-to-package-directory secret-keys generate
+```
+
+### Using [Mint](https://github.com/yonaskolb/Mint)
+
+**Installation:**
+
+Add the following to your `Mintfile`.
+
+```shell
+simorgh3196/SecretKeys@0.0.2
+```
+
+**Execution:**
+
+```shell
+mint run secret-keys generate
+```
+
+## Command Options
+
+```shell
+secret-keys generate --help
+```
+
+```shell
+USAGE: secret-keys generate [--config <config>] [--project <project>] [--verbose]
+
+OPTIONS:
+  -c, --config <config>   The path to the configuration file (default: .secretkeys.yml)
+  -p, --project <project> The path to the project root (default: .)
+  -v, --verbose           Enables verbose log messages
+  --version               Show the version.
+  -h, --help              Show help information.
+```
+
+## Usage
+
+For a detailed example, see [Example/CommandPluginExample](https://github.com/simorgh3196/swift-secret-keys/tree/main/Example/CommandPluginExample).
+
+### Generate as Swift Package project
+
+1. Create a configuration file. ([docs](#configuration-file))
+1. Set `exportType` in the Configuration File to `swiftpm`.
+1. Run the `generate` command.
+
+    ```shell
+    <config:output>
+    └── SecretKeys
+       ├── .gitignore
+       ├── Package.swift
+       └── Sources
+           ├── Keys
+           │  ├── SecretKeys+Keys.swift # Specified in .gitignore by default
+           │  └── SecretKeys.swift
+           └── SecretValueDecoder
+             └── SecretValueDecoder.swift
+    ```
+
+1. Add a dependency to your project.
+
+    ```swift
+    .package(name: "SecretKeys", path: "Dependencies/SwiftPM/SecretKeys")
+    ```
+
+### Generate as CocoaPods project
+
+1. Create a configuration file. ([docs](#configuration-file))
+1. Set `exportType` in the Configuration File to `cocoapods`.
+1. Run the `generate` command.
+
+    ```shell
+    <config:output>
+    └── SecretKeys
+       ├── .gitignore
+       ├── Keys.podspec
+       ├── SecretValueDecoder.podspec
+       └── Sources
+           ├── Keys
+           │  ├── SecretKeys+Keys.swift # Specified in .gitignore by default
+           │  └── SecretKeys.swift
+           └── SecretValueDecoder
+             └── SecretValueDecoder.swift
+    ```
+
+1. Add a dependency to your project.
+
+    ```ruby
+    pod 'Keys', :path => '<config:output>/SecretKeys'
+    pod 'SecretValueDecoder', :path => '<config:output>/SecretKeys'
+    ```
+
+### Generate as swift codes
+
+1. Create a configuration file. ([docs](#configuration-file))
+1. Set `exportType` in the Configuration File to `sourcesOnly`.
+1. Run the `generate` command.
+
+    ```shell
+    <config:output>
+    └── SecretKeys
+       ├── .gitignore
+       ├── Keys
+       │  └── Keys.generated.swift # Specified in .gitignore by default
+       └── SecretValueDecoder.generated.swift # Specified in .gitignore by default
+    ```
+
+1. Add swift codes to your project targets.
 
 ## Configuration File
 
@@ -61,56 +170,4 @@ targets:
           DEBUG: CLIENT_SECRET_ADHOC
       apiPath:
         name: BASE_API_PATH
-```
-
-## Usage
-
-### Using Swift package manager
-
-Installation:
-
-Add a dependency to `Package.swift`.
-
-```swift
-.package(url: "https://github.com/simorgh3196/swift-secret-keys", from: "0.0.2"),
-```
-
-Execution:
-
-```shell
-swift package plugin --allow-writing-to-package-directory secret-keys generate
-```
-
-### Using [Mint](https://github.com/yonaskolb/Mint)
-
-Installation:
-
-Add the following to your Mintfile.
-
-```
-simorgh3196/SecretKeys@0.0.2
-```
-
-Execution:
-
-```shell
-mint run secret-keys generate
-```
-
-## Getting Started
-
-Add the config file to your project and call the generate command.
-
-```sh
-secret-keys generate
-```
-
-```
-USAGE: secret-keys generate [--config <config>] [--verbose]
-
-OPTIONS:
-  -c, --config <config>   The path to the configuration file (default: .secretkeys.yml)
-  --verbose               Enables verbose log messages
-  --version               Show the version.
-  -h, --help              Show help information.
 ```
