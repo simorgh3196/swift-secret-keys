@@ -9,11 +9,12 @@ build:
 
 .PHONY: release-build
 release-build:
-	@$(MAKE) .build/release/secret-keys
+	@$(MAKE) .build/apple/Products/Release/secret-keys
 
 .PHONY: artifact
 artifact:
-	@$(MAKE) secret-keys.artifactbundle
+	@$(MAKE) secret-keys.artifactbundle.zip
+	swift package compute-checksum secret-keys.artifactbundle.zip
 
 .PHONY: test
 test:
@@ -55,14 +56,17 @@ example:
 	swift build
 	@touch $@
 
-.build/release/secret-keys: Package.swift Sources/**/*.swift
+.build/apple/Products/Release/secret-keys: Package.swift Sources/**/*.swift
 	swift build -c release --arch arm64 --arch x86_64
 	@touch $@
 
-secret-keys.artifactbundle: .build/release/secret-keys LICENCE README.md
+secret-keys.artifactbundle: .build/apple/Products/Release/secret-keys LICENCE README.md
 	rm -rf secret-keys.artifactbundle
 	mkdir -p $(ARTIFACT_BUNDLE)/secret-keys/bin
 	sed -e "s/__VERSION__/$(VERSION)/" $(ARTIFACT_BUNDLE_INFO_TEMPLATE) > $(ARTIFACT_BUNDLE)/info.json
-	cp .build/release/secret-keys $(ARTIFACT_BUNDLE)/secret-keys/bin/
+	cp .build/apple/Products/Release/secret-keys $(ARTIFACT_BUNDLE)/secret-keys/bin/
 	cp LICENCE README.md $(ARTIFACT_BUNDLE)/secret-keys/
 	@touch $@
+
+secret-keys.artifactbundle.zip: secret-keys.artifactbundle
+	@zip -yr secret-keys.artifactbundle.zip secret-keys.artifactbundle
