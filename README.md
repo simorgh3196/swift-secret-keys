@@ -14,7 +14,7 @@ A generator that allows access to environment variables and values defined in th
 Add a dependency to `Package.swift`.
 
 ```swift
-.package(url: "https://github.com/simorgh3196/swift-secret-keys", from: "0.0.2"),
+.package(url: "https://github.com/simorgh3196/swift-secret-keys", from: "0.1.0"),
 ```
 
 **Execution:**
@@ -30,7 +30,7 @@ swift package plugin --allow-writing-to-package-directory secret-keys generate
 Add the following to your `Mintfile`.
 
 ```shell
-simorgh3196/SecretKeys@0.0.2
+simorgh3196/SecretKeys@0.1.0
 ```
 
 **Execution:**
