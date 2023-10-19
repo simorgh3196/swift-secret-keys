@@ -15,7 +15,7 @@ jobs:
     env:
       DEVELOPER_DIR: /Applications/Xcode_14.2.app/Contents/Developer
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: setup-cocoapods
         uses: maxim-lobanov/setup-cocoapods@v1
         with:
@@ -31,7 +31,7 @@ jobs:
     env:
       DEVELOPER_DIR: /Applications/Xcode_13.4.1.app/Contents/Developer
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Run Tests for SecretKeys
         run: make test
 
@@ -39,7 +39,7 @@ jobs:
     name: Discover Typos
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Discover typos
         run: |
           export PATH="$PATH:/Library/Frameworks/Python.framework/Versions/3.11/bin"
