@@ -13,7 +13,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.2.1"),
-        .package(url: "https://github.com/jpsim/Yams", from: "5.0.3"),
+        .package(url: "https://github.com/jpsim/Yams", from: "5.1.0"),
     ],
     targets: [
         .plugin(
